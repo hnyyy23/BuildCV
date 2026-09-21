@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 
 export default function App() {
-  // State Pengaturan Kertas & Margin
-  const [paperSize, setPaperSize] = useState('A4'); // A4, A5, F4
+  const [paperSize, setPaperSize] = useState('A4');
   const [margin, setMargin] = useState(2); // 1, 1.27, atau 2 cm
 
-  // State Data CV Bebas
   const [cvData, setCvData] = useState({
     name: 'Haniyyah Salwa Amatullah',
     address: 'Keputih, Sukolilo, Surabaya',
@@ -13,7 +11,24 @@ export default function App() {
     phone: '(62)813-6219-2288',
     linkedin: 'in/hnysalwa',
     portfolio: 'https://intip.in/Portovolio Salwa',
-    summary: 'Mahasiswa Program Studi Fisika Institut Teknologi Sepuluh Nopember (ITS) angkatan 2024 yang memiliki minat dan pengalaman dalam manajemen acara, pengembangan sumber daya manusia (PSDM), serta koordinasi tim.',
+    summary: 'Mahasiswa Program Studi Fisika Institut Teknologi Sepuluh Nopember (ITS) angkatan 2024 yang memiliki minat dan pengalaman dalam manajemen acara, pengembangan sumber daya manusia (PSDM), serta koordinasi tim. Berpengalaman dalam menyusun rundown kegiatan, mengelola koordinasi antar divisi, serta mendukung pelaksanaan berbagai kegiatan organisasi dan kepanitiaan.',
+    
+    educations: [
+      {
+        id: 1,
+        degree: 'S1-Fisika',
+        institution: 'Institut Teknologi Sepuluh Nopember (ITS)',
+        date: '2024 - Sekarang',
+        score: 'IPK: 3,24',
+        details: [
+          'Seleksi Tahap 2 Program Beasiswa Rumah Kepemimpinan (2026)',
+          'Awardee Beasiswa BAZNAS Kabupaten Gresik (2024)',
+          'Asisten Laboratorium Fisika Listrik (2026)',
+          'Asisten Dosen Fisika 2 (5 SKS) - 2026'
+        ]
+      }
+    ],
+
     experiences: [
       {
         id: 1,
@@ -22,52 +37,55 @@ export default function App() {
         organization: 'Physic Summit 2025',
         location: 'Surabaya, Jawa Timur',
         tasks: [
-          'Menyusun rundown beserta kebutuhan teknis welcome party',
-          'Menjadi MC Technical Meeting Physics Summit Olympiad (PSO)'
+          'Menyusun rundown beserta kebutuhan teknis welcome party dan upgrading student ambassador eksternal.',
+          'Menyusun rundown roadshow dan hari-H acara.',
+          'Menjadi PIC Student Ambassador'
         ]
       }
-    ]
+    ],
+
+    workExperiences: [
+      {
+        id: 1,
+        title: 'Freelance Telesurveyor',
+        date: '08 Feb 2026 - 16 Feb 2026',
+        organization: 'MPM AHM Jawa Timur',
+        location: 'Surabaya, Jawa Timur',
+        tasks: [
+          'Melakukan panggilan telepon sesuai database responden.',
+          'Menyampaikan pertanyaan survei berdasarkan skrip serta mencatat hasil secara akurat.'
+        ]
+      }
+    ],
+
+    certifications: [
+      'LKMM Pra-TD',
+      'LKMM TD',
+      'LKMW',
+      'PKTI TD',
+      'Pelatihan Dasar Microsoft 365 Copilot',
+      'Pelatihan Rumus Dasar Excel'
+    ],
+
+    digitalSkills: ['Microsoft Word', 'Microsoft Excel', 'Microsoft PowerPoint', 'Google Docs', 'Google Sheets', 'Canva', 'CapCut'],
+    softSkills: ['Komunikasi', 'Public Speaking', 'Kerja Tim', 'Kepemimpinan', 'Manajemen Acara', 'Problem Solving', 'Manajemen Waktu']
   });
 
   const handlePrint = () => {
     window.print();
   };
 
+  // Helper functions untuk menambah/menghapus data dinamis
+  const addEducation = () => {
+    setCvData({...cvData, educations: [...cvData.educations, { id: Date.now(), degree: '', institution: '', date: '', score: '', details: [''] }]});
+  };
+
   const addExperience = () => {
-    setCvData({
-      ...cvData,
-      experiences: [...cvData.experiences, { id: Date.now(), title: '', date: '', organization: '', location: '', tasks: [''] }]
-    });
+    setCvData({...cvData, experiences: [...cvData.experiences, { id: Date.now(), title: '', date: '', organization: '', location: '', tasks: [''] }]});
   };
 
-  const updateExperience = (index, field, value) => {
-    const newExp = [...cvData.experiences];
-    newExp[index][field] = value;
-    setCvData({ ...cvData, experiences: newExp });
-  };
-
-  const removeExperience = (index) => {
-    const newExp = [...cvData.experiences];
-    newExp.splice(index, 1);
-    setCvData({ ...cvData, experiences: newExp });
-  };
-
-  const addTask = (expIndex) => {
-    const newExp = [...cvData.experiences];
-    newExp[expIndex].tasks.push('');
-    setCvData({ ...cvData, experiences: newExp });
-  };
-
-  const updateTask = (expIndex, taskIndex, value) => {
-    const newExp = [...cvData.experiences];
-    newExp[expIndex].tasks[taskIndex] = value;
-    setCvData({ ...cvData, experiences: newExp });
-  };
-
-  const removeTask = (expIndex, taskIndex) => {
-    const newExp = [...cvData.experiences];
-    newExp[expIndex].tasks.splice(taskIndex, 1);
-    setCvData({ ...cvData, experiences: newExp });
+  const addWork = () => {
+    setCvData({...cvData, workExperiences: [...cvData.workExperiences, { id: Date.now(), title: '', date: '', organization: '', location: '', tasks: [''] }]});
   };
 
   const getPaperDimensions = () => {
@@ -79,11 +97,11 @@ export default function App() {
   return (
     <div className="flex h-screen bg-gray-200 overflow-hidden font-sans">
       
-      {/* KIRI: PANEL EDITOR (DISEMBUNYIKAN SAAT PRINT) */}
+      {/* KIRI: PANEL EDITOR */}
       <div className="w-1/2 h-full overflow-y-auto bg-white border-r p-6 no-print shadow-lg z-10">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">CV Builder ATS Friendly</h1>
-          <span className="text-xs bg-green-100 text-green-700 font-semibold px-2 py-1 rounded">Bebas Akses Tanpa Login</span>
+          <span className="text-xs bg-green-100 text-green-700 font-semibold px-2 py-1 rounded">Live Editor</span>
         </div>
 
         {/* PENGATURAN KERTAS & MARGIN */}
@@ -116,7 +134,7 @@ export default function App() {
         <h3 className="font-bold text-lg border-b pb-2 mb-4">Data Diri & Kontak</h3>
         <div className="flex flex-col gap-3 mb-8">
           <input type="text" placeholder="Nama Lengkap" value={cvData.name} onChange={(e) => setCvData({...cvData, name: e.target.value})} className="border p-2 rounded" />
-          <input type="text" placeholder="Alamat (Cth: Keputih, Surabaya)" value={cvData.address} onChange={(e) => setCvData({...cvData, address: e.target.value})} className="border p-2 rounded" />
+          <input type="text" placeholder="Alamat" value={cvData.address} onChange={(e) => setCvData({...cvData, address: e.target.value})} className="border p-2 rounded" />
           <input type="text" placeholder="Email" value={cvData.email} onChange={(e) => setCvData({...cvData, email: e.target.value})} className="border p-2 rounded" />
           <input type="text" placeholder="Nomor Telepon" value={cvData.phone} onChange={(e) => setCvData({...cvData, phone: e.target.value})} className="border p-2 rounded" />
           <input type="text" placeholder="LinkedIn" value={cvData.linkedin} onChange={(e) => setCvData({...cvData, linkedin: e.target.value})} className="border p-2 rounded" />
@@ -124,36 +142,136 @@ export default function App() {
           <textarea placeholder="Ringkasan Profil" value={cvData.summary} onChange={(e) => setCvData({...cvData, summary: e.target.value})} className="border p-2 rounded h-24" />
         </div>
 
-        {/* PENGALAMAN / KEPANITIAAN */}
-        <h3 className="font-bold text-lg border-b pb-2 mb-4">Pengalaman / Kepanitiaan</h3>
+        {/* PENDIDIKAN */}
+        <h3 className="font-bold text-lg border-b pb-2 mb-4">Pendidikan</h3>
+        {cvData.educations.map((edu, idx) => (
+          <div key={edu.id} className="bg-gray-50 p-4 rounded border mb-4">
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <input type="text" placeholder="Jenjang/Jurusan (Cth: S1-Fisika)" value={edu.degree} onChange={(e) => {
+                const newEdu = [...cvData.educations]; newEdu[idx].degree = e.target.value; setCvData({...cvData, educations: newEdu});
+              }} className="border p-2 rounded font-bold" />
+              <input type="text" placeholder="Tahun (Cth: 2024-Sekarang)" value={edu.date} onChange={(e) => {
+                const newEdu = [...cvData.educations]; newEdu[idx].date = e.target.value; setCvData({...cvData, educations: newEdu});
+              }} className="border p-2 rounded" />
+              <input type="text" placeholder="Nama Institusi" value={edu.institution} onChange={(e) => {
+                const newEdu = [...cvData.educations]; newEdu[idx].institution = e.target.value; setCvData({...cvData, educations: newEdu});
+              }} className="border p-2 rounded" />
+              <input type="text" placeholder="IPK / Nilai" value={edu.score} onChange={(e) => {
+                const newEdu = [...cvData.educations]; newEdu[idx].score = e.target.value; setCvData({...cvData, educations: newEdu});
+              }} className="border p-2 rounded" />
+            </div>
+          </div>
+        ))}
+        <button onClick={addEducation} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pendidikan</button>
+
+        {/* PENGALAMAN ORGANISASI & KEPANITIAAN */}
+        <h3 className="font-bold text-lg border-b pb-2 mb-4">Pengalaman Organisasi & Kepanitiaan</h3>
         {cvData.experiences.map((exp, expIndex) => (
           <div key={exp.id} className="bg-gray-50 p-4 rounded border mb-4 relative">
-            <button onClick={() => removeExperience(expIndex)} className="absolute top-3 right-3 text-red-500 text-sm font-bold hover:text-red-700">Hapus</button>
+            <button onClick={() => {
+              const newExp = [...cvData.experiences]; newExp.splice(expIndex, 1); setCvData({...cvData, experiences: newExp});
+            }} className="absolute top-3 right-3 text-red-500 text-sm font-bold">Hapus</button>
             <div className="grid grid-cols-2 gap-2 mb-2 pr-16">
-              <input type="text" placeholder="Jabatan" value={exp.title} onChange={(e) => updateExperience(expIndex, 'title', e.target.value)} className="border p-2 rounded font-bold" />
-              <input type="text" placeholder="Waktu (Cth: Jun - Nov 2025)" value={exp.date} onChange={(e) => updateExperience(expIndex, 'date', e.target.value)} className="border p-2 rounded" />
-              <input type="text" placeholder="Nama Acara / Organisasi" value={exp.organization} onChange={(e) => updateExperience(expIndex, 'organization', e.target.value)} className="border p-2 rounded" />
-              <input type="text" placeholder="Lokasi" value={exp.location} onChange={(e) => updateExperience(expIndex, 'location', e.target.value)} className="border p-2 rounded" />
+              <input type="text" placeholder="Jabatan" value={exp.title} onChange={(e) => {
+                const newExp = [...cvData.experiences]; newExp[expIndex].title = e.target.value; setCvData({...cvData, experiences: newExp});
+              }} className="border p-2 rounded font-bold" />
+              <input type="text" placeholder="Waktu" value={exp.date} onChange={(e) => {
+                const newExp = [...cvData.experiences]; newExp[expIndex].date = e.target.value; setCvData({...cvData, experiences: newExp});
+              }} className="border p-2 rounded" />
+              <input type="text" placeholder="Nama Organisasi / Acara" value={exp.organization} onChange={(e) => {
+                const newExp = [...cvData.experiences]; newExp[expIndex].organization = e.target.value; setCvData({...cvData, experiences: newExp});
+              }} className="border p-2 rounded" />
+              <input type="text" placeholder="Lokasi" value={exp.location} onChange={(e) => {
+                const newExp = [...cvData.experiences]; newExp[expIndex].location = e.target.value; setCvData({...cvData, experiences: newExp});
+              }} className="border p-2 rounded" />
             </div>
             
             <div className="mt-3">
               <label className="text-sm font-semibold text-gray-700">Tugas / Pencapaian (1 Kolom = 1 Kalimat):</label>
-              {exp.tasks.map((task, taskIndex) => (
-                <div key={taskIndex} className="flex gap-2 mt-2">
+              {exp.tasks.map((task, tIdx) => (
+                <div key={tIdx} className="flex gap-2 mt-2">
                   <span className="mt-2 text-gray-400">•</span>
-                  <input type="text" value={task} onChange={(e) => updateTask(expIndex, taskIndex, e.target.value)} className="border p-2 rounded w-full" placeholder="Tulis kalimat tugas..." />
-                  <button onClick={() => removeTask(expIndex, taskIndex)} className="bg-red-100 text-red-600 px-3 rounded hover:bg-red-200 font-bold">X</button>
+                  <input type="text" value={task} onChange={(e) => {
+                    const newExp = [...cvData.experiences]; newExp[expIndex].tasks[tIdx] = e.target.value; setCvData({...cvData, experiences: newExp});
+                  }} className="border p-2 rounded w-full" placeholder="Tulis kalimat..." />
+                  <button onClick={() => {
+                    const newExp = [...cvData.experiences]; newExp[expIndex].tasks.splice(tIdx, 1); setCvData({...cvData, experiences: newExp});
+                  }} className="bg-red-100 text-red-600 px-3 rounded font-bold">X</button>
                 </div>
               ))}
-              <button onClick={() => addTask(expIndex)} className="mt-2 text-blue-600 text-sm font-semibold hover:underline">
-                + Tambah Kalimat Tugas
-              </button>
+              <button onClick={() => {
+                const newExp = [...cvData.experiences]; newExp[expIndex].tasks.push(''); setCvData({...cvData, experiences: newExp});
+              }} className="mt-2 text-blue-600 text-sm font-semibold">+ Tambah Kalimat Tugas</button>
             </div>
           </div>
         ))}
-        <button onClick={addExperience} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-10">
-          + Tambah Pengalaman Baru
-        </button>
+        <button onClick={addExperience} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pengalaman Organisasi/Kepanitiaan</button>
+
+        {/* PENGALAMAN KERJA / PRAKTIK */}
+        <h3 className="font-bold text-lg border-b pb-2 mb-4">Pengalaman Kerja / Praktik</h3>
+        {cvData.workExperiences.map((work, wIndex) => (
+          <div key={work.id} className="bg-gray-50 p-4 rounded border mb-4 relative">
+            <button onClick={() => {
+              const newWork = [...cvData.workExperiences]; newWork.splice(wIndex, 1); setCvData({...cvData, workExperiences: newWork});
+            }} className="absolute top-3 right-3 text-red-500 text-sm font-bold">Hapus</button>
+            <div className="grid grid-cols-2 gap-2 mb-2 pr-16">
+              <input type="text" placeholder="Jabatan" value={work.title} onChange={(e) => {
+                const newWork = [...cvData.workExperiences]; newWork[wIndex].title = e.target.value; setCvData({...cvData, workExperiences: newWork});
+              }} className="border p-2 rounded font-bold" />
+              <input type="text" placeholder="Waktu" value={work.date} onChange={(e) => {
+                const newWork = [...cvData.workExperiences]; newWork[wIndex].date = e.target.value; setCvData({...cvData, workExperiences: newWork});
+              }} className="border p-2 rounded" />
+              <input type="text" placeholder="Perusahaan / Instansi" value={work.organization} onChange={(e) => {
+                const newWork = [...cvData.workExperiences]; newWork[wIndex].organization = e.target.value; setCvData({...cvData, workExperiences: newWork});
+              }} className="border p-2 rounded" />
+              <input type="text" placeholder="Lokasi" value={work.location} onChange={(e) => {
+                const newWork = [...cvData.workExperiences]; newWork[wIndex].location = e.target.value; setCvData({...cvData, workExperiences: newWork});
+              }} className="border p-2 rounded" />
+            </div>
+            <div className="mt-3">
+              <label className="text-sm font-semibold text-gray-700">Tugas / Tanggung Jawab:</label>
+              {work.tasks.map((task, tIdx) => (
+                <div key={tIdx} className="flex gap-2 mt-2">
+                  <span className="mt-2 text-gray-400">•</span>
+                  <input type="text" value={task} onChange={(e) => {
+                    const newWork = [...cvData.workExperiences]; newWork[wIndex].tasks[tIdx] = e.target.value; setCvData({...cvData, workExperiences: newWork});
+                  }} className="border p-2 rounded w-full" placeholder="Tulis kalimat..." />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <button onClick={addWork} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pengalaman Kerja/Praktik</button>
+
+        {/* PELATIHAN & SERTIFIKASI */}
+        <h3 className="font-bold text-lg border-b pb-2 mb-4">Pelatihan dan Sertifikasi</h3>
+        <div className="flex flex-col gap-2 mb-8">
+          {cvData.certifications.map((cert, cIdx) => (
+            <div key={cIdx} className="flex gap-2">
+              <input type="text" value={cert} onChange={(e) => {
+                const newCerts = [...cvData.certifications]; newCerts[cIdx] = e.target.value; setCvData({...cvData, certifications: newCerts});
+              }} className="border p-2 rounded w-full" />
+              <button onClick={() => {
+                const newCerts = [...cvData.certifications]; newCerts.splice(cIdx, 1); setCvData({...cvData, certifications: newCerts});
+              }} className="bg-red-100 text-red-600 px-3 rounded font-bold">X</button>
+            </div>
+          ))}
+          <button onClick={() => setCvData({...cvData, certifications: [...cvData.certifications, '']})} className="text-blue-600 text-sm font-semibold">+ Tambah Sertifikasi/Pelatihan</button>
+        </div>
+
+        {/* KETERAMPILAN */}
+        <h3 className="font-bold text-lg border-b pb-2 mb-4">Keterampilan Digital & Soft Skills</h3>
+        <div className="mb-10">
+          <label className="block text-sm font-semibold mb-2">Keterampilan Digital (pisahkan dengan koma):</label>
+          <input type="text" value={cvData.digitalSkills.join(', ')} onChange={(e) => {
+            setCvData({...cvData, digitalSkills: e.target.value.split(',').map(s => s.trim())});
+          }} className="border p-2 rounded w-full mb-4" />
+
+          <label className="block text-sm font-semibold mb-2">Soft Skills (pisahkan dengan koma):</label>
+          <input type="text" value={cvData.softSkills.join(', ')} onChange={(e) => {
+            setCvData({...cvData, softSkills: e.target.value.split(',').map(s => s.trim())});
+          }} className="border p-2 rounded w-full" />
+        </div>
       </div>
 
       {/* KANAN: PRATINJAU KERTAS */}
@@ -183,9 +301,33 @@ export default function App() {
             <p className="text-sm text-justify leading-snug">{cvData.summary}</p>
           </div>
 
-          {/* EXPERIENCES */}
-          <div>
-            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Pengalaman</h2>
+          {/* EDUCATION */}
+          <div className="mb-4">
+            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Pendidikan</h2>
+            {cvData.educations.map((edu, idx) => (
+              <div key={idx} className="mb-2">
+                <div className="flex justify-between text-sm">
+                  <span className="font-bold">{edu.degree}</span>
+                  <span>{edu.date}</span>
+                </div>
+                <div className="flex justify-between text-sm mb-1 italic">
+                  <span>{edu.institution}</span>
+                  <span>{edu.score}</span>
+                </div>
+                {edu.details && edu.details.length > 0 && (
+                  <ul className="list-disc pl-5 text-sm m-0">
+                    {edu.details.map((d, dIdx) => (
+                      d.trim() !== '' && <li key={dIdx} className="mb-0.5">{d}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* ORGANIZATIONS & COMMITTEES */}
+          <div className="mb-4">
+            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Pengalaman Organisasi & Kepanitiaan</h2>
             {cvData.experiences.map((exp, index) => (
               <div key={index} className="mb-3">
                 <div className="flex justify-between text-sm">
@@ -203,6 +345,53 @@ export default function App() {
                 </ul>
               </div>
             ))}
+          </div>
+
+          {/* WORK / PRACTICAL EXPERIENCE */}
+          {cvData.workExperiences.length > 0 && (
+            <div className="mb-4">
+              <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Pengalaman Kerja</h2>
+              {cvData.workExperiences.map((work, index) => (
+                <div key={index} className="mb-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-bold">{work.title}</span>
+                    <span>{work.date}</span>
+                  </div>
+                  <div className="flex justify-between text-sm mb-1 italic">
+                    <span>{work.organization}</span>
+                    <span>{work.location}</span>
+                  </div>
+                  <ul className="list-disc pl-5 text-sm m-0">
+                    {work.tasks.map((task, tIndex) => (
+                      task.trim() !== '' && <li key={tIndex} className="mb-0.5">{task}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* CERTIFICATIONS */}
+          <div className="mb-4">
+            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Pelatihan dan Sertifikasi</h2>
+            <ul className="list-disc pl-5 text-sm m-0">
+              {cvData.certifications.map((cert, index) => (
+                cert.trim() !== '' && <li key={index} className="mb-0.5">{cert}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* SKILLS */}
+          <div>
+            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Keterampilan</h2>
+            <div className="text-sm mb-1">
+              <span className="font-bold">Keterampilan Digital: </span>
+              {cvData.digitalSkills.join(', ')}
+            </div>
+            <div className="text-sm">
+              <span className="font-bold">Soft Skills: </span>
+              {cvData.softSkills.join(', ')}
+            </div>
           </div>
 
         </div>
