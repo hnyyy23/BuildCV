@@ -13,10 +13,8 @@ const presetDigitalSkills = ["Microsoft Word", "Microsoft Excel", "Microsoft Pow
 const presetSoftSkills = ["Komunikasi", "Public Speaking", "Kerja Tim", "Kepemimpinan", "Manajemen Acara", "Problem Solving", "Negosiasi", "Manajemen Waktu"];
 
 export default function App() {
-  // State Halaman: 'dashboard' atau 'editor'
   const [view, setView] = useState('dashboard');
 
-  // Multi-Project State
   const [projects, setProjects] = useState(() => {
     const saved = localStorage.getItem('cv_projects_v2');
     if (saved) return JSON.parse(saved);
@@ -100,7 +98,7 @@ export default function App() {
     window.html2pdf().from(element).set(options).save();
   };
 
-  // ================= TAMPILAN 1: DASHBOARD / HALAMAN UTAMA FILE =================
+  // ================= TAMPILAN 1: DASHBOARD =================
   if (view === 'dashboard') {
     return (
       <div className="min-h-screen bg-gray-100 p-8 font-sans">
@@ -151,14 +149,13 @@ export default function App() {
     );
   }
 
-  // ================= TAMPILAN 2: HALAMAN EDITOR PER CV =================
+  // ================= TAMPILAN 2: EDITOR =================
   return (
     <div className="flex h-screen bg-gray-200 overflow-hidden font-sans">
       
       {/* KIRI: PANEL FORM EDITOR */}
       <div className="w-1/2 h-full overflow-y-auto bg-white border-r p-6 no-print shadow-lg z-10">
         
-        {/* Tombol Kembali ke Dashboard */}
         <div className="flex justify-between items-center mb-6 bg-gray-50 p-3 rounded-lg border">
           <button 
             onClick={() => setView('dashboard')}
@@ -206,7 +203,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* DATA DIRI & LOKASI DROPDOWN */}
+        {/* DATA DIRI */}
         <h3 className="font-bold text-lg border-b pb-2 mb-4">Data Diri & Kontak</h3>
         <div className="flex flex-col gap-3 mb-8">
           <input type="text" placeholder="Nama Lengkap" value={currentCv.name} onChange={(e) => updateCurrentCv({ name: e.target.value })} className="border p-2 rounded" />
@@ -326,67 +323,154 @@ export default function App() {
         ))}
         <button onClick={() => updateCurrentCv({ experiences: [...currentCv.experiences, { id: Date.now(), title: '', startMonth: 'Jan', startYear: '2025', endMonth: 'Des', endYear: '2025', isCurrent: false, organization: '', location: '', tasks: [''] }] })} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pengalaman</button>
 
-        {/* KETERAMPILAN */}
+        {/* KETERAMPILAN BARU (BEBAS KETIK & PILIH) */}
         <h3 className="font-bold text-lg border-b pb-2 mb-4">Keterampilan</h3>
-        <div className="mb-10 bg-gray-50 p-4 rounded border">
-          <label className="block text-sm font-semibold mb-2 text-gray-700">Keterampilan Digital:</label>
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {presetDigitalSkills.map(skill => (
-              <button 
-                key={skill}
-                onClick={() => {
-                  if (!currentCv.digitalSkills.includes(skill)) {
-                    updateCurrentCv({ digitalSkills: [...currentCv.digitalSkills, skill] });
-                  }
-                }}
-                className={`text-xs px-2.5 py-1 rounded border ${currentCv.digitalSkills.includes(skill) ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-              >
-                + {skill}
-              </button>
-            ))}
-          </div>
-          <input 
-            type="text" 
-            placeholder="Ketik keterampilan tambahan" 
-            value={currentCv.digitalSkills.join(', ')} 
-            onChange={(e) => updateCurrentCv({ digitalSkills: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} 
-            className="border p-2 rounded w-full mb-4 bg-white text-sm" 
-          />
+        <div className="mb-10 bg-gray-50 p-4 rounded border flex flex-col gap-6">
+          
+          {/* Digital Skills */}
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-700">Keterampilan Digital:</label>
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {presetDigitalSkills.map(skill => {
+                const isSelected = currentCv.digitalSkills.includes(skill);
+                return (
+                  <button 
+                    key={skill}
+                    onClick={() => {
+                      if (isSelected) {
+                        updateCurrentCv({ digitalSkills: currentCv.digitalSkills.filter(s => s !== skill) });
+                      } else {
+                        updateCurrentCv({ digitalSkills: [...currentCv.digitalSkills, skill] });
+                      }
+                    }}
+                    className={`text-xs px-2.5 py-1 rounded border transition ${isSelected ? 'bg-blue-600 text-white font-bold' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+                  >
+                    {isSelected ? '✓ ' : '+ '}{skill}
+                  </button>
+                );
+              })}
+            </div>
 
-          <label className="block text-sm font-semibold mb-2 text-gray-700">Soft Skills:</label>
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {presetSoftSkills.map(skill => (
-              <button 
-                key={skill}
-                onClick={() => {
-                  if (!currentCv.softSkills.includes(skill)) {
-                    updateCurrentCv({ softSkills: [...currentCv.softSkills, skill] });
+            <div className="flex gap-2">
+              <input 
+                type="text" 
+                id="custom-digital-input" 
+                placeholder="Ketik keterampilan lain..." 
+                className="border p-2 rounded w-full bg-white text-sm"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const val = e.target.value.trim();
+                    if (val && !currentCv.digitalSkills.includes(val)) {
+                      updateCurrentCv({ digitalSkills: [...currentCv.digitalSkills, val] });
+                      e.target.value = '';
+                    }
                   }
                 }}
-                className={`text-xs px-2.5 py-1 rounded border ${currentCv.softSkills.includes(skill) ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+              />
+              <button 
+                type="button"
+                onClick={() => {
+                  const input = document.getElementById('custom-digital-input');
+                  const val = input.value.trim();
+                  if (val && !currentCv.digitalSkills.includes(val)) {
+                    updateCurrentCv({ digitalSkills: [...currentCv.digitalSkills, val] });
+                    input.value = '';
+                  }
+                }}
+                className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-blue-700"
               >
-                + {skill}
+                Tambah
               </button>
-            ))}
+            </div>
+
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {currentCv.digitalSkills.map((skill, sIdx) => (
+                <span key={sIdx} className="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5 font-medium">
+                  {skill}
+                  <button onClick={() => updateCurrentCv({ digitalSkills: currentCv.digitalSkills.filter((_, i) => i !== sIdx) })} className="text-blue-400 hover:text-red-600 font-bold">×</button>
+                </span>
+              ))}
+            </div>
           </div>
-          <input 
-            type="text" 
-            placeholder="Ketik soft skills tambahan" 
-            value={currentCv.softSkills.join(', ')} 
-            onChange={(e) => updateCurrentCv({ softSkills: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} 
-            className="border p-2 rounded w-full bg-white text-sm" 
-          />
+
+          {/* Soft Skills */}
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-700">Soft Skills:</label>
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {presetSoftSkills.map(skill => {
+                const isSelected = currentCv.softSkills.includes(skill);
+                return (
+                  <button 
+                    key={skill}
+                    onClick={() => {
+                      if (isSelected) {
+                        updateCurrentCv({ softSkills: currentCv.softSkills.filter(s => s !== skill) });
+                      } else {
+                        updateCurrentCv({ softSkills: [...currentCv.softSkills, skill] });
+                      }
+                    }}
+                    className={`text-xs px-2.5 py-1 rounded border transition ${isSelected ? 'bg-blue-600 text-white font-bold' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+                  >
+                    {isSelected ? '✓ ' : '+ '}{skill}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex gap-2">
+              <input 
+                type="text" 
+                id="custom-soft-input" 
+                placeholder="Ketik soft skill lain..." 
+                className="border p-2 rounded w-full bg-white text-sm"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const val = e.target.value.trim();
+                    if (val && !currentCv.softSkills.includes(val)) {
+                      updateCurrentCv({ softSkills: [...currentCv.softSkills, val] });
+                      e.target.value = '';
+                    }
+                  }
+                }}
+              />
+              <button 
+                type="button"
+                onClick={() => {
+                  const input = document.getElementById('custom-soft-input');
+                  const val = input.value.trim();
+                  if (val && !currentCv.softSkills.includes(val)) {
+                    updateCurrentCv({ softSkills: [...currentCv.softSkills, val] });
+                    input.value = '';
+                  }
+                }}
+                className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-blue-700"
+              >
+                Tambah
+              </button>
+            </div>
+
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {currentCv.softSkills.map((skill, sIdx) => (
+                <span key={sIdx} className="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5 font-medium">
+                  {skill}
+                  <button onClick={() => updateCurrentCv({ softSkills: currentCv.softSkills.filter((_, i) => i !== sIdx) })} className="text-blue-400 hover:text-red-600 font-bold">×</button>
+                </span>
+              ))}
+            </div>
+          </div>
+
         </div>
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS (DIPERBAIKI AGAR TIDAK TERPOTONG) */}
+      {/* KANAN: PRATINJAU KERTAS */}
       <div className="w-1/2 h-full overflow-y-auto p-8 flex justify-center print-area bg-gray-100">
         <div 
           id="cv-preview-element"
-          className="bg-white shadow-xl text-[10.5pt] mb-12 box-border"
+          className="bg-white shadow-xl text-[10.5pt] mb-12 box-border shrink-0"
           style={{
             width: currentCv.paperSize === 'A4' ? '210mm' : currentCv.paperSize === 'A5' ? '148mm' : '215.9mm',
-            maxWidth: '100%',
             padding: `${currentCv.margin}cm`,
             fontFamily: "'Times New Roman', Times, serif",
             color: "black",
@@ -406,7 +490,7 @@ export default function App() {
           {/* SUMMARY */}
           <div className="mb-2">
             <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Ringkasan Profil</h2>
-            <p className="text-justify text-[10pt]">{currentCv.summary}</p>
+            <p className="text-justify text-[10.0pt]">{currentCv.summary}</p>
           </div>
 
           {/* EDUCATION */}
@@ -414,11 +498,11 @@ export default function App() {
             <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pendidikan</h2>
             {currentCv.educations.map((edu, idx) => (
               <div key={idx} className="mb-1.5">
-                <div className="flex justify-between font-bold text-[10pt]">
+                <div className="flex justify-between font-bold text-[10.0pt]">
                   <span>{edu.degree}</span>
                   <span>{edu.startYear} - {edu.isCurrent ? 'Sekarang' : edu.endYear}</span>
                 </div>
-                <div className="flex justify-between italic text-[10pt] mb-0.5">
+                <div className="flex justify-between italic text-[10.0pt] mb-0.5">
                   <span>{edu.institution}</span>
                   <span>{edu.score}</span>
                 </div>
@@ -438,11 +522,11 @@ export default function App() {
             <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pengalaman Organisasi & Kepanitiaan</h2>
             {currentCv.experiences.map((exp, index) => (
               <div key={index} className="mb-2">
-                <div className="flex justify-between font-bold text-[10pt]">
+                <div className="flex justify-between font-bold text-[10.0pt]">
                   <span>{exp.title}</span>
                   <span>{exp.startMonth} {exp.startYear} - {exp.isCurrent ? 'Sekarang' : `${exp.endMonth} ${exp.endYear}`}</span>
                 </div>
-                <div className="flex justify-between italic text-[10pt] mb-0.5">
+                <div className="flex justify-between italic text-[10.0pt] mb-0.5">
                   <span>{exp.organization}</span>
                   <span>{exp.location}</span>
                 </div>
