@@ -1,31 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-
-// ⚠️ GANTI DENGAN CONFIG FIREBASE MILIKMU
-const firebaseConfig = {
-  apiKey: "API_KEY_KAMU",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "APP_ID_KAMU"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import React, { useState } from 'react';
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(true);
-
   // State Pengaturan Kertas & Margin
   const [paperSize, setPaperSize] = useState('A4'); // A4, A5, F4
   const [margin, setMargin] = useState(2); // 1, 1.27, atau 2 cm
 
-  // State Data CV
+  // State Data CV Bebas
   const [cvData, setCvData] = useState({
     name: 'Haniyyah Salwa Amatullah',
     address: 'Keputih, Sukolilo, Surabaya',
@@ -48,26 +28,6 @@ export default function App() {
       }
     ]
   });
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const handleAuth = async (e) => {
-    e.preventDefault();
-    try {
-      if (isLogin) {
-        await signInWithEmailAndPassword(auth, email, password);
-      } else {
-        await createUserWithEmailAndPassword(auth, email, password);
-      }
-    } catch (error) {
-      alert("Error: " + error.message);
-    }
-  };
 
   const handlePrint = () => {
     window.print();
@@ -116,36 +76,14 @@ export default function App() {
     if (paperSize === 'F4') return { width: '215.9mm', minHeight: '330.2mm' };
   };
 
-  // HALAMAN LOGIN / REGISTER
-  if (!user) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded shadow-md w-96">
-          <h2 className="text-2xl font-bold mb-6 text-center">{isLogin ? 'Login CV Builder' : 'Daftar Akun'}</h2>
-          <form onSubmit={handleAuth} className="flex flex-col gap-4">
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="border p-2 rounded" required />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="border p-2 rounded" required />
-            <button type="submit" className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 font-semibold">
-              {isLogin ? 'Masuk' : 'Buat Akun'}
-            </button>
-          </form>
-          <button onClick={() => setIsLogin(!isLogin)} className="mt-4 text-sm text-blue-500 w-full text-center">
-            {isLogin ? 'Belum punya akun? Daftar di sini' : 'Sudah punya akun? Login'}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // HALAMAN UTAMA BUILDER
   return (
     <div className="flex h-screen bg-gray-200 overflow-hidden font-sans">
       
-      {/* KIRI: PANEL EDITOR */}
+      {/* KIRI: PANEL EDITOR (DISEMBUNYIKAN SAAT PRINT) */}
       <div className="w-1/2 h-full overflow-y-auto bg-white border-r p-6 no-print shadow-lg z-10">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Editor CV</h1>
-          <button onClick={() => signOut(auth)} className="text-red-500 text-sm font-semibold hover:underline">Logout</button>
+          <h1 className="text-2xl font-bold text-gray-800">CV Builder ATS Friendly</h1>
+          <span className="text-xs bg-green-100 text-green-700 font-semibold px-2 py-1 rounded">Bebas Akses Tanpa Login</span>
         </div>
 
         {/* PENGATURAN KERTAS & MARGIN */}
@@ -174,20 +112,27 @@ export default function App() {
           </button>
         </div>
 
-        <h3 className="font-bold text-lg border-b pb-2 mb-4">Data Diri</h3>
+        {/* DATA DIRI */}
+        <h3 className="font-bold text-lg border-b pb-2 mb-4">Data Diri & Kontak</h3>
         <div className="flex flex-col gap-3 mb-8">
           <input type="text" placeholder="Nama Lengkap" value={cvData.name} onChange={(e) => setCvData({...cvData, name: e.target.value})} className="border p-2 rounded" />
+          <input type="text" placeholder="Alamat (Cth: Keputih, Surabaya)" value={cvData.address} onChange={(e) => setCvData({...cvData, address: e.target.value})} className="border p-2 rounded" />
+          <input type="text" placeholder="Email" value={cvData.email} onChange={(e) => setCvData({...cvData, email: e.target.value})} className="border p-2 rounded" />
+          <input type="text" placeholder="Nomor Telepon" value={cvData.phone} onChange={(e) => setCvData({...cvData, phone: e.target.value})} className="border p-2 rounded" />
+          <input type="text" placeholder="LinkedIn" value={cvData.linkedin} onChange={(e) => setCvData({...cvData, linkedin: e.target.value})} className="border p-2 rounded" />
+          <input type="text" placeholder="Link Portofolio" value={cvData.portfolio} onChange={(e) => setCvData({...cvData, portfolio: e.target.value})} className="border p-2 rounded" />
           <textarea placeholder="Ringkasan Profil" value={cvData.summary} onChange={(e) => setCvData({...cvData, summary: e.target.value})} className="border p-2 rounded h-24" />
         </div>
 
+        {/* PENGALAMAN / KEPANITIAAN */}
         <h3 className="font-bold text-lg border-b pb-2 mb-4">Pengalaman / Kepanitiaan</h3>
         {cvData.experiences.map((exp, expIndex) => (
           <div key={exp.id} className="bg-gray-50 p-4 rounded border mb-4 relative">
-            <button onClick={() => removeExperience(expIndex)} className="absolute top-3 right-3 text-red-500 font-bold hover:text-red-700">Hapus Pengalaman</button>
-            <div className="grid grid-cols-2 gap-2 mb-2 pr-24">
+            <button onClick={() => removeExperience(expIndex)} className="absolute top-3 right-3 text-red-500 text-sm font-bold hover:text-red-700">Hapus</button>
+            <div className="grid grid-cols-2 gap-2 mb-2 pr-16">
               <input type="text" placeholder="Jabatan" value={exp.title} onChange={(e) => updateExperience(expIndex, 'title', e.target.value)} className="border p-2 rounded font-bold" />
-              <input type="text" placeholder="Waktu (cth: Jun - Nov 2025)" value={exp.date} onChange={(e) => updateExperience(expIndex, 'date', e.target.value)} className="border p-2 rounded" />
-              <input type="text" placeholder="Nama Acara/Organisasi" value={exp.organization} onChange={(e) => updateExperience(expIndex, 'organization', e.target.value)} className="border p-2 rounded" />
+              <input type="text" placeholder="Waktu (Cth: Jun - Nov 2025)" value={exp.date} onChange={(e) => updateExperience(expIndex, 'date', e.target.value)} className="border p-2 rounded" />
+              <input type="text" placeholder="Nama Acara / Organisasi" value={exp.organization} onChange={(e) => updateExperience(expIndex, 'organization', e.target.value)} className="border p-2 rounded" />
               <input type="text" placeholder="Lokasi" value={exp.location} onChange={(e) => updateExperience(expIndex, 'location', e.target.value)} className="border p-2 rounded" />
             </div>
             
@@ -201,7 +146,7 @@ export default function App() {
                 </div>
               ))}
               <button onClick={() => addTask(expIndex)} className="mt-2 text-blue-600 text-sm font-semibold hover:underline">
-                + Tambah Kalimat
+                + Tambah Kalimat Tugas
               </button>
             </div>
           </div>
