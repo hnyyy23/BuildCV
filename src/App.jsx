@@ -2,21 +2,23 @@ import React, { useState, useEffect } from 'react';
 
 // Data Provinsi dan Kota Utama di Indonesia
 const indonesiaRegions = {
-  "Jawa Timur": ["Surabaya", "Gresik", "Sidoarjo", "Malang", "Sidoarjo", "Mojokerto", "Lamongan", "Jember"],
+  "Jawa Timur": ["Surabaya", "Gresik", "Sidoarjo", "Malang", "Mojokerto", "Lamongan", "Jember"],
   "DKI Jakarta": ["Jakarta Pusat", "Jakarta Selatan", "Jakarta Barat", "Jakarta Timur", "Jakarta Utara"],
   "Jawa Barat": ["Bandung", "Bekasi", "Depok", "Bogor", "Cimahi"],
   "Jawa Tengah": ["Semarang", "Surakarta", "Yogyakarta", "Salatiga", "Magelang"],
   "Bali": ["Denpasar", "Badung", "Gianyar", "Tabanan"]
 };
 
-// Preset Keterampilan
 const presetDigitalSkills = ["Microsoft Word", "Microsoft Excel", "Microsoft PowerPoint", "Google Docs", "Google Sheets", "Canva", "CapCut", "Python", "LaTeX", "SPSS"];
 const presetSoftSkills = ["Komunikasi", "Public Speaking", "Kerja Tim", "Kepemimpinan", "Manajemen Acara", "Problem Solving", "Negosiasi", "Manajemen Waktu"];
 
 export default function App() {
+  // State Halaman: 'dashboard' atau 'editor'
+  const [view, setView] = useState('dashboard');
+
   // Multi-Project State
   const [projects, setProjects] = useState(() => {
-    const saved = localStorage.getItem('cv_projects');
+    const saved = localStorage.getItem('cv_projects_v2');
     if (saved) return JSON.parse(saved);
     return [
       {
@@ -51,9 +53,8 @@ export default function App() {
   const [activeProjectId, setActiveProjectId] = useState(projects[0]?.id || 1);
   const currentCv = projects.find(p => p.id === activeProjectId) || projects[0];
 
-  // Simpan ke LocalStorage setiap ada perubahan
   useEffect(() => {
-    localStorage.setItem('cv_projects', JSON.stringify(projects));
+    localStorage.setItem('cv_projects_v2', JSON.stringify(projects));
   }, [projects]);
 
   const updateCurrentCv = (updatedFields) => {
@@ -66,24 +67,27 @@ export default function App() {
     const newProj = {
       ...projects[0],
       id: newId,
-      title: `Project CV Baru (${projects.length + 1})`,
+      title: `CV Baru (${projects.length + 1})`,
       fileName: 'CV_Baru'
     };
     setProjects([...projects, newProj]);
     setActiveProjectId(newId);
+    setView('editor');
   };
 
-  const deleteProject = (id) => {
+  const deleteProject = (id, e) => {
+    e.stopPropagation();
     if (projects.length === 1) {
       alert("Minimal harus ada 1 project CV!");
       return;
     }
-    const filtered = projects.filter(p => p.id !== id);
-    setProjects(filtered);
-    setActiveProjectId(filtered[0].id);
+    if (confirm("Yakin ingin menghapus CV ini?")) {
+      const filtered = projects.filter(p => p.id !== id);
+      setProjects(filtered);
+      setActiveProjectId(filtered[0].id);
+    }
   };
 
-  // Download PDF
   const handleDownloadPDF = () => {
     const element = document.getElementById('cv-preview-element');
     const options = {
@@ -96,47 +100,86 @@ export default function App() {
     window.html2pdf().from(element).set(options).save();
   };
 
+  // ================= TAMPILAN 1: DASHBOARD / HALAMAN UTAMA FILE =================
+  if (view === 'dashboard') {
+    return (
+      <div className="min-h-screen bg-gray-100 p-8 font-sans">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex justify-between items-center mb-8 bg-white p-6 rounded-xl shadow-sm border">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">📂 Daftar Dokumen CV Saya</h1>
+              <p className="text-gray-500 text-sm mt-1">Pilih CV yang ingin diedit atau buat dokumen baru.</p>
+            </div>
+            <button 
+              onClick={createNewProject}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg shadow transition flex items-center gap-2"
+            >
+              + Buat CV Baru
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {projects.map(proj => (
+              <div 
+                key={proj.id}
+                onClick={() => { setActiveProjectId(proj.id); setView('editor'); }}
+                className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md hover:border-blue-400 cursor-pointer transition flex flex-col justify-between relative group"
+              >
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-bold text-lg text-gray-800">{proj.title}</h3>
+                    <span className="text-xs bg-blue-50 text-blue-600 font-semibold px-2.5 py-1 rounded-full">{proj.paperSize}</span>
+                  </div>
+                  <p className="text-gray-600 text-sm font-medium">{proj.name || 'Belum ada nama'}</p>
+                  <p className="text-gray-400 text-xs mt-1">File: {proj.fileName}.pdf</p>
+                </div>
+                
+                <div className="flex justify-between items-center mt-6 pt-4 border-t text-sm">
+                  <span className="text-blue-600 font-semibold group-hover:underline">✏️ Klik untuk Edit &rarr;</span>
+                  <button 
+                    onClick={(e) => deleteProject(proj.id, e)}
+                    className="text-red-500 hover:bg-red-50 p-1.5 rounded transition text-xs font-bold"
+                  >
+                    🗑️ Hapus
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ================= TAMPILAN 2: HALAMAN EDITOR PER CV =================
   return (
     <div className="flex h-screen bg-gray-200 overflow-hidden font-sans">
       
-      {/* KIRI: PANEL EDITOR */}
+      {/* KIRI: PANEL FORM EDITOR */}
       <div className="w-1/2 h-full overflow-y-auto bg-white border-r p-6 no-print shadow-lg z-10">
         
-        {/* MANAJEMEN PROJECT CV */}
-        <div className="bg-gray-100 p-4 rounded-lg mb-6 border">
-          <h3 className="font-bold text-gray-700 mb-2">📁 Kelola Project CV</h3>
-          <div className="flex gap-2 flex-wrap mb-3">
-            {projects.map(proj => (
-              <button 
-                key={proj.id} 
-                onClick={() => setActiveProjectId(proj.id)}
-                className={`px-3 py-1.5 rounded text-sm font-semibold transition ${proj.id === activeProjectId ? 'bg-blue-600 text-white shadow' : 'bg-white text-gray-700 border hover:bg-gray-50'}`}
-              >
-                {proj.title}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <button onClick={createNewProject} className="bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded hover:bg-green-700">+ Buat CV Baru</button>
-            <button onClick={() => deleteProject(activeProjectId)} className="bg-red-100 text-red-600 text-xs font-bold py-1.5 px-3 rounded hover:bg-red-200">🗑️ Hapus CV Ini</button>
-          </div>
+        {/* Tombol Kembali ke Dashboard */}
+        <div className="flex justify-between items-center mb-6 bg-gray-50 p-3 rounded-lg border">
+          <button 
+            onClick={() => setView('dashboard')}
+            className="text-blue-600 hover:text-blue-800 text-sm font-bold flex items-center gap-1"
+          >
+            &larr; Kembali ke Daftar CV
+          </button>
+          <span className="text-xs bg-green-100 text-green-700 font-semibold px-2.5 py-1 rounded">Edit: {currentCv.title}</span>
         </div>
 
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl font-bold text-gray-800">Editor: {currentCv.title}</h1>
-        </div>
-
-        {/* PENGATURAN DOKUMEN & NAMA FILE */}
+        {/* PENGATURAN DOKUMEN & DOWNLOAD */}
         <div className="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-100">
           <h3 className="font-semibold mb-3">Pengaturan Dokumen & Download</h3>
           
           <div className="mb-3">
-            <label className="block text-sm text-gray-600 mb-1">Nama Project CV (untuk di editor):</label>
+            <label className="block text-sm text-gray-600 mb-1">Nama Dokumen (untuk di Daftar CV):</label>
             <input type="text" value={currentCv.title} onChange={(e) => updateCurrentCv({ title: e.target.value })} className="border p-2 rounded w-full bg-white text-sm" />
           </div>
 
           <div className="mb-3">
-            <label className="block text-sm text-gray-600 mb-1">Format Nama File PDF saat di-Download:</label>
+            <label className="block text-sm text-gray-600 mb-1">Nama File PDF saat di-Download:</label>
             <input type="text" value={currentCv.fileName} onChange={(e) => updateCurrentCv({ fileName: e.target.value })} className="border p-2 rounded w-full bg-white text-sm" placeholder="Cth: CV_Nama_Posisi" />
           </div>
 
@@ -169,7 +212,6 @@ export default function App() {
           <input type="text" placeholder="Nama Lengkap" value={currentCv.name} onChange={(e) => updateCurrentCv({ name: e.target.value })} className="border p-2 rounded" />
           <input type="text" placeholder="Alamat Detail (Cth: Keputih, Sukolilo)" value={currentCv.address} onChange={(e) => updateCurrentCv({ address: e.target.value })} className="border p-2 rounded" />
           
-          {/* Dropdown Provinsi & Kota */}
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="block text-xs text-gray-500 mb-1">Provinsi:</label>
@@ -178,7 +220,7 @@ export default function App() {
                 onChange={(e) => updateCurrentCv({ province: e.target.value, city: indonesiaRegions[e.target.value]?.[0] || '' })} 
                 className="border p-2 rounded w-full bg-white text-sm"
               >
-                {Object.keys(indonesiaRegions.map ? indonesiaRegions : indonesiaRegions).map(prov => (
+                {Object.keys(indonesiaRegions).map(prov => (
                   <option key={prov} value={prov}>{prov}</option>
                 ))}
               </select>
@@ -204,7 +246,7 @@ export default function App() {
           <textarea placeholder="Ringkasan Profil" value={currentCv.summary} onChange={(e) => updateCurrentCv({ summary: e.target.value })} className="border p-2 rounded h-24" />
         </div>
 
-        {/* PENGALAMAN ORGANISASI (DENGAN TANGGAL DROPLET) */}
+        {/* PENGALAMAN ORGANISASI */}
         <h3 className="font-bold text-lg border-b pb-2 mb-4">Pengalaman Organisasi & Kepanitiaan</h3>
         {currentCv.experiences.map((exp, expIndex) => (
           <div key={exp.id} className="bg-gray-50 p-4 rounded border mb-4 relative">
@@ -221,7 +263,6 @@ export default function App() {
               }} className="border p-2 rounded" />
             </div>
 
-            {/* Pilihan Waktu / Tanggal */}
             <div className="bg-white p-3 rounded border mb-2 grid grid-cols-2 gap-2">
               <div>
                 <label className="text-xs text-gray-500 block mb-1">Mulai:</label>
@@ -285,10 +326,10 @@ export default function App() {
         ))}
         <button onClick={() => updateCurrentCv({ experiences: [...currentCv.experiences, { id: Date.now(), title: '', startMonth: 'Jan', startYear: '2025', endMonth: 'Des', endYear: '2025', isCurrent: false, organization: '', location: '', tasks: [''] }] })} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pengalaman</button>
 
-        {/* KETERAMPILAN DENGAN PRESET & LAINNYA */}
-        <h3 className="font-bold text-lg border-b pb-2 mb-4">Keterampilan (Pilih atau Tambah Bebas)</h3>
+        {/* KETERAMPILAN */}
+        <h3 className="font-bold text-lg border-b pb-2 mb-4">Keterampilan</h3>
         <div className="mb-10 bg-gray-50 p-4 rounded border">
-          <label className="block text-sm font-semibold mb-2 text-gray-700">Keterampilan Digital (Klik untuk pilih / Ketik tambahan):</label>
+          <label className="block text-sm font-semibold mb-2 text-gray-700">Keterampilan Digital:</label>
           <div className="flex flex-wrap gap-1.5 mb-3">
             {presetDigitalSkills.map(skill => (
               <button 
@@ -306,7 +347,7 @@ export default function App() {
           </div>
           <input 
             type="text" 
-            placeholder="Ketik keterampilan tambahan (pisahkan koma jika banyak)" 
+            placeholder="Ketik keterampilan tambahan" 
             value={currentCv.digitalSkills.join(', ')} 
             onChange={(e) => updateCurrentCv({ digitalSkills: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} 
             className="border p-2 rounded w-full mb-4 bg-white text-sm" 
@@ -336,16 +377,16 @@ export default function App() {
             className="border p-2 rounded w-full bg-white text-sm" 
           />
         </div>
-
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS */}
-      <div className="w-1/2 h-full overflow-y-auto p-8 flex flex-col items-center print-area bg-gray-100">
+      {/* KANAN: PRATINJAU KERTAS (DIPERBAIKI AGAR TIDAK TERPOTONG) */}
+      <div className="w-1/2 h-full overflow-y-auto p-8 flex justify-center print-area bg-gray-100">
         <div 
           id="cv-preview-element"
-          className="bg-white shadow-xl text-[10.5pt] mb-12"
+          className="bg-white shadow-xl text-[10.5pt] mb-12 box-border"
           style={{
             width: currentCv.paperSize === 'A4' ? '210mm' : currentCv.paperSize === 'A5' ? '148mm' : '215.9mm',
+            maxWidth: '100%',
             padding: `${currentCv.margin}cm`,
             fontFamily: "'Times New Roman', Times, serif",
             color: "black",
