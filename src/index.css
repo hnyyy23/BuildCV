@@ -5,6 +5,7 @@
 @media print {
   body {
     background-color: white !important;
+    -webkit-print-color-adjust: exact;
   }
   .no-print {
     display: none !important;
@@ -13,7 +14,13 @@
     box-shadow: none !important;
     margin: 0 !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
     padding: 0 !important;
+    overflow: visible !important;
+  }
+  /* Mencegah kotak pengalaman/pendidikan terpotong secara janggal di tengah baris */
+  .cv-section-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
