@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export default function App() {
   const [paperSize, setPaperSize] = useState('A4');
-  const [margin, setMargin] = useState(2); // 1, 1.27, atau 2 cm
+  const [margin, setMargin] = useState(1); // Margin diset 1 cm agar lebih muat banyak
 
   const [cvData, setCvData] = useState({
     name: 'Haniyyah Salwa Amatullah',
@@ -75,7 +75,6 @@ export default function App() {
     window.print();
   };
 
-  // Helper functions untuk menambah/menghapus data dinamis
   const addEducation = () => {
     setCvData({...cvData, educations: [...cvData.educations, { id: Date.now(), degree: '', institution: '', date: '', score: '', details: [''] }]});
   };
@@ -89,9 +88,9 @@ export default function App() {
   };
 
   const getPaperDimensions = () => {
-    if (paperSize === 'A4') return { width: '210mm', minHeight: '297mm' };
-    if (paperSize === 'A5') return { width: '148mm', minHeight: '210mm' };
-    if (paperSize === 'F4') return { width: '215.9mm', minHeight: '330.2mm' };
+    if (paperSize === 'A4') return { width: '210mm' };
+    if (paperSize === 'A5') return { width: '148mm' };
+    if (paperSize === 'F4') return { width: '215.9mm' };
   };
 
   return (
@@ -147,10 +146,10 @@ export default function App() {
         {cvData.educations.map((edu, idx) => (
           <div key={edu.id} className="bg-gray-50 p-4 rounded border mb-4">
             <div className="grid grid-cols-2 gap-2 mb-2">
-              <input type="text" placeholder="Jenjang/Jurusan (Cth: S1-Fisika)" value={edu.degree} onChange={(e) => {
+              <input type="text" placeholder="Jenjang/Jurusan" value={edu.degree} onChange={(e) => {
                 const newEdu = [...cvData.educations]; newEdu[idx].degree = e.target.value; setCvData({...cvData, educations: newEdu});
               }} className="border p-2 rounded font-bold" />
-              <input type="text" placeholder="Tahun (Cth: 2024-Sekarang)" value={edu.date} onChange={(e) => {
+              <input type="text" placeholder="Tahun" value={edu.date} onChange={(e) => {
                 const newEdu = [...cvData.educations]; newEdu[idx].date = e.target.value; setCvData({...cvData, educations: newEdu});
               }} className="border p-2 rounded" />
               <input type="text" placeholder="Nama Institusi" value={edu.institution} onChange={(e) => {
@@ -164,7 +163,7 @@ export default function App() {
         ))}
         <button onClick={addEducation} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pendidikan</button>
 
-        {/* PENGALAMAN ORGANISASI & KEPANITIAAN */}
+        {/* PENGALAMAN ORGANISASI */}
         <h3 className="font-bold text-lg border-b pb-2 mb-4">Pengalaman Organisasi & Kepanitiaan</h3>
         {cvData.experiences.map((exp, expIndex) => (
           <div key={exp.id} className="bg-gray-50 p-4 rounded border mb-4 relative">
@@ -187,7 +186,7 @@ export default function App() {
             </div>
             
             <div className="mt-3">
-              <label className="text-sm font-semibold text-gray-700">Tugas / Pencapaian (1 Kolom = 1 Kalimat):</label>
+              <label className="text-sm font-semibold text-gray-700">Tugas / Pencapaian:</label>
               {exp.tasks.map((task, tIdx) => (
                 <div key={tIdx} className="flex gap-2 mt-2">
                   <span className="mt-2 text-gray-400">•</span>
@@ -205,9 +204,9 @@ export default function App() {
             </div>
           </div>
         ))}
-        <button onClick={addExperience} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pengalaman Organisasi/Kepanitiaan</button>
+        <button onClick={addExperience} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pengalaman</button>
 
-        {/* PENGALAMAN KERJA / PRAKTIK */}
+        {/* PENGALAMAN KERJA */}
         <h3 className="font-bold text-lg border-b pb-2 mb-4">Pengalaman Kerja / Praktik</h3>
         {cvData.workExperiences.map((work, wIndex) => (
           <div key={work.id} className="bg-gray-50 p-4 rounded border mb-4 relative">
@@ -241,9 +240,9 @@ export default function App() {
             </div>
           </div>
         ))}
-        <button onClick={addWork} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pengalaman Kerja/Praktik</button>
+        <button onClick={addWork} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pengalaman Kerja</button>
 
-        {/* PELATIHAN & SERTIFIKASI */}
+        {/* SERTIFIKASI */}
         <h3 className="font-bold text-lg border-b pb-2 mb-4">Pelatihan dan Sertifikasi</h3>
         <div className="flex flex-col gap-2 mb-8">
           {cvData.certifications.map((cert, cIdx) => (
@@ -256,68 +255,70 @@ export default function App() {
               }} className="bg-red-100 text-red-600 px-3 rounded font-bold">X</button>
             </div>
           ))}
-          <button onClick={() => setCvData({...cvData, certifications: [...cvData.certifications, '']})} className="text-blue-600 text-sm font-semibold">+ Tambah Sertifikasi/Pelatihan</button>
+          <button onClick={() => setCvData({...cvData, certifications: [...cvData.certifications, '']})} className="text-blue-600 text-sm font-semibold">+ Tambah Sertifikasi</button>
         </div>
 
         {/* KETERAMPILAN */}
-        <h3 className="font-bold text-lg border-b pb-2 mb-4">Keterampilan Digital & Soft Skills</h3>
+        <h3 className="font-bold text-lg border-b pb-2 mb-4">Keterampilan</h3>
         <div className="mb-10">
-          <label className="block text-sm font-semibold mb-2">Keterampilan Digital (pisahkan dengan koma):</label>
+          <label className="block text-sm font-semibold mb-2">Keterampilan Digital:</label>
           <input type="text" value={cvData.digitalSkills.join(', ')} onChange={(e) => {
             setCvData({...cvData, digitalSkills: e.target.value.split(',').map(s => s.trim())});
           }} className="border p-2 rounded w-full mb-4" />
 
-          <label className="block text-sm font-semibold mb-2">Soft Skills (pisahkan dengan koma):</label>
+          <label className="block text-sm font-semibold mb-2">Soft Skills:</label>
           <input type="text" value={cvData.softSkills.join(', ')} onChange={(e) => {
             setCvData({...cvData, softSkills: e.target.value.split(',').map(s => s.trim())});
           }} className="border p-2 rounded w-full" />
         </div>
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS */}
+      {/* KANAN: PRATINJAU KERTAS (DIUBAH MENJADI BLOCK ALIRAN NORMAL AGAR TIDAK TUMPANG TINDIH) */}
       <div className="w-1/2 h-full overflow-y-auto p-8 flex justify-center print-area">
         <div 
-          className="bg-white shadow-xl transition-all duration-300"
+          className="bg-white shadow-xl text-[10.5pt]"
           style={{
             width: getPaperDimensions().width,
-            minHeight: getPaperDimensions().minHeight,
             padding: `${margin}cm`,
             fontFamily: "'Times New Roman', Times, serif",
-            color: "black"
+            color: "black",
+            lineHeight: "1.15",
+            height: "auto", // Menggunakan auto agar kertas menyesuaikan isi secara natural ke bawah tanpa tumpang tindih
+            minHeight: "auto"
           }}
         >
           {/* HEADER */}
-          <div className="text-center mb-4">
-            <h1 className="text-xl font-bold uppercase mb-1">{cvData.name}</h1>
-            <p className="text-sm">
+          <div className="text-center mb-2">
+            <h1 className="text-[15pt] font-bold uppercase mb-0.5">{cvData.name}</h1>
+            <p className="text-[9.5pt]">
               {cvData.address} | {cvData.email} | {cvData.phone} <br/>
               {cvData.linkedin} | {cvData.portfolio}
             </p>
           </div>
 
           {/* SUMMARY */}
-          <div className="mb-4">
-            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Ringkasan Profil</h2>
-            <p className="text-sm text-justify leading-snug">{cvData.summary}</p>
+          <div className="mb-2">
+            <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Ringkasan Profil</h2>
+            <p className="text-justify text-[10pt]">{cvData.summary}</p>
           </div>
 
           {/* EDUCATION */}
-          <div className="mb-4">
-            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Pendidikan</h2>
+          <div className="mb-2">
+            <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pendidikan</h2>
             {cvData.educations.map((edu, idx) => (
-              <div key={idx} className="mb-2">
-                <div className="flex justify-between text-sm">
-                  <span className="font-bold">{edu.degree}</span>
+              <div key={idx} className="mb-1.5">
+                <div className="flex justify-between font-bold text-[10pt]">
+                  <span>{edu.degree}</span>
                   <span>{edu.date}</span>
                 </div>
-                <div className="flex justify-between text-sm mb-1 italic">
+                <div className="flex justify-between italic text-[10pt] mb-0.5">
                   <span>{edu.institution}</span>
                   <span>{edu.score}</span>
                 </div>
                 {edu.details && edu.details.length > 0 && (
-                  <ul className="list-disc pl-5 text-sm m-0">
+                  <ul className="list-disc pl-4 m-0 text-[9.5pt]">
                     {edu.details.map((d, dIdx) => (
-                      d.trim() !== '' && <li key={dIdx} className="mb-0.5">{d}</li>
+                      d.trim() !== '' && <li key={dIdx} className="mb-0">{d}</li>
                     ))}
                   </ul>
                 )}
@@ -325,45 +326,45 @@ export default function App() {
             ))}
           </div>
 
-          {/* ORGANIZATIONS & COMMITTEES */}
-          <div className="mb-4">
-            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Pengalaman Organisasi & Kepanitiaan</h2>
+          {/* EXPERIENCES */}
+          <div className="mb-2">
+            <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pengalaman Organisasi & Kepanitiaan</h2>
             {cvData.experiences.map((exp, index) => (
-              <div key={index} className="mb-3">
-                <div className="flex justify-between text-sm">
-                  <span className="font-bold">{exp.title}</span>
+              <div key={index} className="mb-2">
+                <div className="flex justify-between font-bold text-[10pt]">
+                  <span>{exp.title}</span>
                   <span>{exp.date}</span>
                 </div>
-                <div className="flex justify-between text-sm mb-1 italic">
+                <div className="flex justify-between italic text-[10pt] mb-0.5">
                   <span>{exp.organization}</span>
                   <span>{exp.location}</span>
                 </div>
-                <ul className="list-disc pl-5 text-sm m-0">
+                <ul className="list-disc pl-4 m-0 text-[9.5pt]">
                   {exp.tasks.map((task, tIndex) => (
-                    task.trim() !== '' && <li key={tIndex} className="mb-0.5">{task}</li>
+                    task.trim() !== '' && <li key={tIndex} className="mb-0">{task}</li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
 
-          {/* WORK / PRACTICAL EXPERIENCE */}
+          {/* WORK EXPERIENCE */}
           {cvData.workExperiences.length > 0 && (
-            <div className="mb-4">
-              <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Pengalaman Kerja</h2>
+            <div className="mb-2">
+              <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pengalaman Kerja</h2>
               {cvData.workExperiences.map((work, index) => (
-                <div key={index} className="mb-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="font-bold">{work.title}</span>
+                <div key={index} className="mb-2">
+                  <div className="flex justify-between font-bold text-[10pt]">
+                    <span>{work.title}</span>
                     <span>{work.date}</span>
                   </div>
-                  <div className="flex justify-between text-sm mb-1 italic">
+                  <div className="flex justify-between italic text-[10pt] mb-0.5">
                     <span>{work.organization}</span>
                     <span>{work.location}</span>
                   </div>
-                  <ul className="list-disc pl-5 text-sm m-0">
+                  <ul className="list-disc pl-4 m-0 text-[9.5pt]">
                     {work.tasks.map((task, tIndex) => (
-                      task.trim() !== '' && <li key={tIndex} className="mb-0.5">{task}</li>
+                      task.trim() !== '' && <li key={tIndex} className="mb-0">{task}</li>
                     ))}
                   </ul>
                 </div>
@@ -372,23 +373,23 @@ export default function App() {
           )}
 
           {/* CERTIFICATIONS */}
-          <div className="mb-4">
-            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Pelatihan dan Sertifikasi</h2>
-            <ul className="list-disc pl-5 text-sm m-0">
+          <div className="mb-2">
+            <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pelatihan dan Sertifikasi</h2>
+            <ul className="list-disc pl-4 m-0 text-[9.5pt]">
               {cvData.certifications.map((cert, index) => (
-                cert.trim() !== '' && <li key={index} className="mb-0.5">{cert}</li>
+                cert.trim() !== '' && <li key={index} className="mb-0">{cert}</li>
               ))}
             </ul>
           </div>
 
           {/* SKILLS */}
           <div>
-            <h2 className="text-[13px] font-bold uppercase border-b border-black mb-2 pb-0.5">Keterampilan</h2>
-            <div className="text-sm mb-1">
+            <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Keterampilan</h2>
+            <div className="text-[9.5pt] mb-0.5">
               <span className="font-bold">Keterampilan Digital: </span>
               {cvData.digitalSkills.join(', ')}
             </div>
-            <div className="text-sm">
+            <div className="text-[9.5pt]">
               <span className="font-bold">Soft Skills: </span>
               {cvData.softSkills.join(', ')}
             </div>
