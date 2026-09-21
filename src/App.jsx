@@ -273,18 +273,17 @@ export default function App() {
         </div>
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS */}
-      <div className="w-1/2 h-full overflow-y-auto p-8 flex justify-center print-area">
+      {/* KANAN: PRATINJAU KERTAS (DIBUAT SCROLLABLE PENUH KE BAWAH) */}
+      <div className="w-1/2 h-full overflow-y-auto p-8 flex flex-col items-center print-area bg-gray-100">
         <div 
-          className="bg-white shadow-xl text-[10.5pt]"
+          className="bg-white shadow-xl text-[10.5pt] mb-12"
           style={{
             width: getPaperDimensions().width,
             padding: `${margin}cm`,
             fontFamily: "'Times New Roman', Times, serif",
             color: "black",
             lineHeight: "1.15",
-            height: "auto",
-            minHeight: "auto"
+            minHeight: '297mm'
           }}
         >
           {/* HEADER */}
