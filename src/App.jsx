@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export default function App() {
   const [paperSize, setPaperSize] = useState('A4');
-  const [margin, setMargin] = useState(1); // Margin 1 cm
+  const [margin, setMargin] = useState(1);
 
   const [cvData, setCvData] = useState({
     name: 'Haniyyah Salwa Amatullah',
@@ -71,8 +71,18 @@ export default function App() {
     softSkills: ['Komunikasi', 'Public Speaking', 'Kerja Tim', 'Kepemimpinan', 'Manajemen Acara', 'Problem Solving', 'Manajemen Waktu']
   });
 
-  const handlePrint = () => {
-    window.print();
+  // FUNGSI DOWNLOAD PDF LANGSUNG (TANPA PRINT DIALOG)
+  const handleDownloadPDF = () => {
+    const element = document.getElementById('cv-preview-element');
+    const options = {
+      margin: 0,
+      filename: `CV_${cvData.name.replace(/\s+/g, '_')}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+      jsPDF: { unit: 'mm', format: paperSize.toLowerCase(), orientation: 'portrait' }
+    };
+
+    window.html2pdf().from(element).set(options).save();
   };
 
   const addEducation = () => {
@@ -103,7 +113,7 @@ export default function App() {
           <span className="text-xs bg-green-100 text-green-700 font-semibold px-2 py-1 rounded">Live Editor</span>
         </div>
 
-        {/* PENGATURAN KERTAS & MARGIN */}
+        {/* PENGATURAN KERTAS & TOMBOL DOWNLOAD */}
         <div className="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-100">
           <h3 className="font-semibold mb-3">Pengaturan Dokumen</h3>
           <div className="flex gap-4 mb-4">
@@ -124,8 +134,8 @@ export default function App() {
               </select>
             </div>
           </div>
-          <button onClick={handlePrint} className="w-full bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition">
-            🖨️ Cetak / Simpan PDF
+          <button onClick={handleDownloadPDF} className="w-full bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition">
+            📥 Download PDF Otomatis
           </button>
         </div>
 
@@ -273,9 +283,10 @@ export default function App() {
         </div>
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS (DIBUAT SCROLLABLE PENUH KE BAWAH) */}
+      {/* KANAN: PRATINJAU KERTAS (DIBERIKAN ID KHUSUS UNTUK DOWNLOAD) */}
       <div className="w-1/2 h-full overflow-y-auto p-8 flex flex-col items-center print-area bg-gray-100">
         <div 
+          id="cv-preview-element"
           className="bg-white shadow-xl text-[10.5pt] mb-12"
           style={{
             width: getPaperDimensions().width,
