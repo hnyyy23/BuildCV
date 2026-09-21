@@ -14,9 +14,7 @@ const presetSoftSkills = ["Komunikasi", "Public Speaking", "Kerja Tim", "Kepemim
 
 export default function App() {
   const [view, setView] = useState('dashboard');
-  
-  // State untuk Mode Tampilan: 'split' (Keduanya), 'editor' (Form Saja), 'preview' (Pratinjau Saja)
-  const [layoutMode, setLayoutMode] = useState('split');
+  const [layoutMode, setLayoutMode] = useState('split'); // 'split', 'editor', 'preview'
 
   const [projects, setProjects] = useState(() => {
     const saved = localStorage.getItem('cv_projects_v3');
@@ -122,7 +120,6 @@ export default function App() {
     window.html2pdf().from(element).set(options).save();
   };
 
-  // ================= TAMPILAN 1: DASHBOARD =================
   if (view === 'dashboard') {
     return (
       <div className="min-h-screen bg-gray-100 p-8 font-sans">
@@ -173,11 +170,10 @@ export default function App() {
     );
   }
 
-  // ================= TAMPILAN 2: EDITOR DENGAN MODE SWITCHER =================
   return (
     <div className="flex h-screen bg-gray-200 overflow-hidden font-sans">
       
-      {/* KIRI: PANEL FORM EDITOR (Tampil jika mode 'split' atau 'editor') */}
+      {/* KIRI: PANEL FORM EDITOR */}
       <div className={`${layoutMode === 'preview' ? 'hidden' : layoutMode === 'editor' ? 'w-full' : 'w-1/2'} h-full overflow-y-auto bg-white border-r p-6 no-print shadow-lg z-10 transition-all duration-300`}>
         
         <div className="flex justify-between items-center mb-6 bg-gray-50 p-3 rounded-lg border flex-wrap gap-2">
@@ -188,7 +184,6 @@ export default function App() {
             &larr; Kembali ke Daftar CV
           </button>
           
-          {/* TOMBOL PENGATUR TAMPILAN (LAYOUT SWITCHER) */}
           <div className="flex bg-gray-200 p-1 rounded-lg text-xs font-semibold">
             <button 
               onClick={() => setLayoutMode('editor')} 
@@ -517,9 +512,9 @@ export default function App() {
         </div>
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS (Tampil jika mode 'split' atau 'preview') */}
-      <div className={`${layoutMode === 'editor' ? 'hidden' : layoutMode === 'preview' ? 'w-full' : 'w-1/2'} h-full overflow-y-auto p-8 flex justify-center print-area bg-gray-100 transition-all duration-300`}>
-        <div style={{ transform: `scale(${currentCv.zoom || 0.85})`, transformOrigin: 'top center', transition: 'transform 0.2s ease' }}>
+      {/* KANAN: PRATINJAU KERTAS DENGAN OVERFLOW-AUTO */}
+      <div className={`${layoutMode === 'editor' ? 'hidden' : layoutMode === 'preview' ? 'w-full' : 'w-1/2'} h-full overflow-auto p-8 flex justify-center print-area bg-gray-100 transition-all duration-300`}>
+        <div style={{ transform: `scale(${currentCv.zoom || 0.85})`, transformOrigin: 'top center', transition: 'transform 0.2s ease', margin: 'auto' }}>
           <div 
             id="cv-preview-element"
             className="bg-white shadow-xl text-[10.5pt] mb-12 box-border shrink-0"
