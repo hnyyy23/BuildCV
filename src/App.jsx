@@ -14,6 +14,9 @@ const presetSoftSkills = ["Komunikasi", "Public Speaking", "Kerja Tim", "Kepemim
 
 export default function App() {
   const [view, setView] = useState('dashboard');
+  
+  // State untuk Mode Tampilan: 'split' (Keduanya), 'editor' (Form Saja), 'preview' (Pratinjau Saja)
+  const [layoutMode, setLayoutMode] = useState('split');
 
   const [projects, setProjects] = useState(() => {
     const saved = localStorage.getItem('cv_projects_v3');
@@ -24,7 +27,7 @@ export default function App() {
         title: 'CV Utama - Fisika ITS',
         paperSize: 'A4',
         margin: 1,
-        zoom: 0.85, // Default zoom agar pas di layar
+        zoom: 0.85,
         fileName: 'CV_Haniyyah_Salwa_Amatullah',
         province: 'Jawa Timur',
         city: 'Surabaya',
@@ -170,21 +173,42 @@ export default function App() {
     );
   }
 
-  // ================= TAMPILAN 2: EDITOR =================
+  // ================= TAMPILAN 2: EDITOR DENGAN MODE SWITCHER =================
   return (
     <div className="flex h-screen bg-gray-200 overflow-hidden font-sans">
       
-      {/* KIRI: PANEL FORM EDITOR */}
-      <div className="w-1/2 h-full overflow-y-auto bg-white border-r p-6 no-print shadow-lg z-10">
+      {/* KIRI: PANEL FORM EDITOR (Tampil jika mode 'split' atau 'editor') */}
+      <div className={`${layoutMode === 'preview' ? 'hidden' : layoutMode === 'editor' ? 'w-full' : 'w-1/2'} h-full overflow-y-auto bg-white border-r p-6 no-print shadow-lg z-10 transition-all duration-300`}>
         
-        <div className="flex justify-between items-center mb-6 bg-gray-50 p-3 rounded-lg border">
+        <div className="flex justify-between items-center mb-6 bg-gray-50 p-3 rounded-lg border flex-wrap gap-2">
           <button 
             onClick={() => setView('dashboard')}
             className="text-blue-600 hover:text-blue-800 text-sm font-bold flex items-center gap-1"
           >
             &larr; Kembali ke Daftar CV
           </button>
-          <span className="text-xs bg-green-100 text-green-700 font-semibold px-2.5 py-1 rounded">Edit: {currentCv.title}</span>
+          
+          {/* TOMBOL PENGATUR TAMPILAN (LAYOUT SWITCHER) */}
+          <div className="flex bg-gray-200 p-1 rounded-lg text-xs font-semibold">
+            <button 
+              onClick={() => setLayoutMode('editor')} 
+              className={`px-3 py-1.5 rounded-md transition ${layoutMode === 'editor' ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-black'}`}
+            >
+              📝 Form Saja
+            </button>
+            <button 
+              onClick={() => setLayoutMode('split')} 
+              className={`px-3 py-1.5 rounded-md transition ${layoutMode === 'split' ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-black'}`}
+            >
+              ⚡ Keduanya
+            </button>
+            <button 
+              onClick={() => setLayoutMode('preview')} 
+              className={`px-3 py-1.5 rounded-md transition ${layoutMode === 'preview' ? 'bg-white text-blue-600 shadow' : 'text-gray-600 hover:text-black'}`}
+            >
+              👁️ Pratinjau Saja
+            </button>
+          </div>
         </div>
 
         {/* PENGATURAN DOKUMEN & ZOOM */}
@@ -493,8 +517,8 @@ export default function App() {
         </div>
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS DENGAN FITUR ZOOM SCALE */}
-      <div className="w-1/2 h-full overflow-y-auto p-8 flex justify-center print-area bg-gray-100">
+      {/* KANAN: PRATINJAU KERTAS (Tampil jika mode 'split' atau 'preview') */}
+      <div className={`${layoutMode === 'editor' ? 'hidden' : layoutMode === 'preview' ? 'w-full' : 'w-1/2'} h-full overflow-y-auto p-8 flex justify-center print-area bg-gray-100 transition-all duration-300`}>
         <div style={{ transform: `scale(${currentCv.zoom || 0.85})`, transformOrigin: 'top center', transition: 'transform 0.2s ease' }}>
           <div 
             id="cv-preview-element"
@@ -575,7 +599,7 @@ export default function App() {
                 <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pelatihan dan Sertifikasi</h2>
                 <ul className="list-disc pl-4 m-0 text-[9.5pt]">
                   {currentCv.certifications.map((cert, index) => (
-                    cert.trim() !== '' && <li key={index} className="mb-0">{cert}</li>
+                    cert.trim() !== '' && <li key={index} className="mb-0">{index + 1}. {cert}</li>
                   ))}
                 </ul>
               </div>
