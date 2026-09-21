@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export default function App() {
   const [paperSize, setPaperSize] = useState('A4');
-  const [margin, setMargin] = useState(1); // Margin diset 1 cm agar lebih muat banyak
+  const [margin, setMargin] = useState(1); // Margin 1 cm
 
   const [cvData, setCvData] = useState({
     name: 'Haniyyah Salwa Amatullah',
@@ -273,7 +273,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS (DIUBAH MENJADI BLOCK ALIRAN NORMAL AGAR TIDAK TUMPANG TINDIH) */}
+      {/* KANAN: PRATINJAU KERTAS */}
       <div className="w-1/2 h-full overflow-y-auto p-8 flex justify-center print-area">
         <div 
           className="bg-white shadow-xl text-[10.5pt]"
@@ -283,12 +283,12 @@ export default function App() {
             fontFamily: "'Times New Roman', Times, serif",
             color: "black",
             lineHeight: "1.15",
-            height: "auto", // Menggunakan auto agar kertas menyesuaikan isi secara natural ke bawah tanpa tumpang tindih
+            height: "auto",
             minHeight: "auto"
           }}
         >
           {/* HEADER */}
-          <div className="text-center mb-2">
+          <div className="text-center mb-2 cv-section-item">
             <h1 className="text-[15pt] font-bold uppercase mb-0.5">{cvData.name}</h1>
             <p className="text-[9.5pt]">
               {cvData.address} | {cvData.email} | {cvData.phone} <br/>
@@ -297,13 +297,13 @@ export default function App() {
           </div>
 
           {/* SUMMARY */}
-          <div className="mb-2">
+          <div className="mb-2 cv-section-item">
             <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Ringkasan Profil</h2>
             <p className="text-justify text-[10pt]">{cvData.summary}</p>
           </div>
 
           {/* EDUCATION */}
-          <div className="mb-2">
+          <div className="mb-2 cv-section-item">
             <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pendidikan</h2>
             {cvData.educations.map((edu, idx) => (
               <div key={idx} className="mb-1.5">
@@ -327,7 +327,7 @@ export default function App() {
           </div>
 
           {/* EXPERIENCES */}
-          <div className="mb-2">
+          <div className="mb-2 cv-section-item">
             <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pengalaman Organisasi & Kepanitiaan</h2>
             {cvData.experiences.map((exp, index) => (
               <div key={index} className="mb-2">
@@ -350,7 +350,7 @@ export default function App() {
 
           {/* WORK EXPERIENCE */}
           {cvData.workExperiences.length > 0 && (
-            <div className="mb-2">
+            <div className="mb-2 cv-section-item">
               <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pengalaman Kerja</h2>
               {cvData.workExperiences.map((work, index) => (
                 <div key={index} className="mb-2">
@@ -373,7 +373,7 @@ export default function App() {
           )}
 
           {/* CERTIFICATIONS */}
-          <div className="mb-2">
+          <div className="mb-2 cv-section-item">
             <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pelatihan dan Sertifikasi</h2>
             <ul className="list-disc pl-4 m-0 text-[9.5pt]">
               {cvData.certifications.map((cert, index) => (
@@ -383,7 +383,7 @@ export default function App() {
           </div>
 
           {/* SKILLS */}
-          <div>
+          <div className="cv-section-item">
             <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Keterampilan</h2>
             <div className="text-[9.5pt] mb-0.5">
               <span className="font-bold">Keterampilan Digital: </span>
