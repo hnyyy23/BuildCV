@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-// Data Provinsi dan Kota Utama di Indonesia
 const indonesiaRegions = {
   "Jawa Timur": ["Surabaya", "Gresik", "Sidoarjo", "Malang", "Mojokerto", "Lamongan", "Jember"],
   "DKI Jakarta": ["Jakarta Pusat", "Jakarta Selatan", "Jakarta Barat", "Jakarta Timur", "Jakarta Utara"],
@@ -14,7 +13,7 @@ const presetSoftSkills = ["Komunikasi", "Public Speaking", "Kerja Tim", "Kepemim
 
 export default function App() {
   const [view, setView] = useState('dashboard');
-  const [layoutMode, setLayoutMode] = useState('split'); // 'split', 'editor', 'preview'
+  const [layoutMode, setLayoutMode] = useState('split');
 
   const [projects, setProjects] = useState(() => {
     const saved = localStorage.getItem('cv_projects_v3');
@@ -171,7 +170,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-200 overflow-hidden font-sans">
+    <div className="flex h-screen bg-gray-200 overflow-hidden font-sans relative">
       
       {/* KIRI: PANEL FORM EDITOR */}
       <div className={`${layoutMode === 'preview' ? 'hidden' : layoutMode === 'editor' ? 'w-full' : 'w-1/2'} h-full overflow-y-auto bg-white border-r p-6 no-print shadow-lg z-10 transition-all duration-300`}>
@@ -512,8 +511,27 @@ export default function App() {
         </div>
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS DENGAN OVERFLOW-AUTO */}
-      <div className={`${layoutMode === 'editor' ? 'hidden' : layoutMode === 'preview' ? 'w-full' : 'w-1/2'} h-full overflow-auto p-8 flex justify-center print-area bg-gray-100 transition-all duration-300`}>
+      {/* KANAN: PRATINJAU KERTAS DENGAN FLOATING NAV (JIKA MODE PREVIEW SAJA) */}
+      <div className={`${layoutMode === 'editor' ? 'hidden' : layoutMode === 'preview' ? 'w-full' : 'w-1/2'} h-full overflow-auto p-8 flex justify-center print-area bg-gray-100 transition-all duration-300 relative`}>
+        
+        {/* Tombol Melayang (Floating Navigation) khusus saat mode Pratinjau Saja */}
+        {layoutMode === 'preview' && (
+          <div className="absolute top-4 left-4 z-20 flex gap-2 bg-white p-2 rounded-lg shadow-md border">
+            <button 
+              onClick={() => setView('dashboard')}
+              className="text-blue-600 hover:text-blue-800 text-xs font-bold px-2 py-1 bg-gray-50 rounded border"
+            >
+              &larr; Daftar CV
+            </button>
+            <button 
+              onClick={() => setLayoutMode('split')} 
+              className="text-xs font-semibold px-3 py-1 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
+            >
+              ⚡ Kembali ke Form Edit
+            </button>
+          </div>
+        )}
+
         <div style={{ transform: `scale(${currentCv.zoom || 0.85})`, transformOrigin: 'top center', transition: 'transform 0.2s ease', margin: 'auto' }}>
           <div 
             id="cv-preview-element"
