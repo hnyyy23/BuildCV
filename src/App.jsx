@@ -786,7 +786,7 @@ export default function App() {
 
             {/* EXPERIENCES */}
             <div className="mb-2">
-              <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pengalaman Organisasi & Kepanitiaan</h2>
+              <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Pengalaman Kerja</h2>
               {currentCv.experiences.map((exp, index) => (
                 <div key={index} className="mb-2">
                   <div className="flex justify-between font-bold text-[10.0pt]">
