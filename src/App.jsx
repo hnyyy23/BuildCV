@@ -16,7 +16,7 @@ export default function App() {
   const [layoutMode, setLayoutMode] = useState('split');
 
   const [projects, setProjects] = useState(() => {
-    const saved = localStorage.getItem('cv_projects_v6');
+    const saved = localStorage.getItem('cv_projects_v7');
     if (saved) return JSON.parse(saved);
     return [
       {
@@ -35,9 +35,8 @@ export default function App() {
         linkedin: 'in/hnysalwa',
         portfolio: 'https://intip.in/Portovolio Salwa',
         summary: 'Mahasiswa Program Studi Fisika Institut Teknologi Sepuluh Nopember (ITS) angkatan 2024 yang memiliki minat dan pengalaman dalam manajemen acara, pengembangan sumber daya manusia (PSDM), koordinasi tim, serta eksperimen laboratorium dan fisika medis.',
-        digitalSkills: ['Microsoft Word', 'Microsoft Excel', 'Canva', 'Python', 'LaTeX'],
-        softSkills: ['Komunikasi', 'Kepemimpinan', 'Manajemen Waktu', 'Public Speaking'],
-        // Sistem Bagian Universal (All Custom Sections)
+        digitalSkills: ['Microsoft Word', 'Microsoft Excel', 'Canva', 'Microsoft PowerPoint', 'Google Docs', 'Google Sheets', 'CapCut'],
+        softSkills: ['Komunikasi', 'Kepemimpinan', 'Manajemen Waktu', 'Public Speaking', 'Problem Solving', 'Manajemen Acara', 'Kerja Tim', 'Negosiasi'],
         sections: [
           {
             id: 1,
@@ -48,8 +47,14 @@ export default function App() {
                 title: 'S1 - Fisika',
                 subtitle: 'Institut Teknologi Sepuluh Nopember (ITS)',
                 period: '2024 - Sekarang',
-                location: 'IPK: 3,24',
-                details: ['Seleksi Tahap 2 Beasiswa Rumah Kepemimpinan']
+                location: 'IPK: 3,25',
+                details: [
+                  'Bidang Minat: Fisika Medis, Fisika Instrumentasi, Opto Elektronika',
+                  'Penerima Beasiswa Baznas Gresik tahun 2025',
+                  'Asisten Dosen Mata kuliah Fisika Listrik Magnet 2026',
+                  'Asisten Laboratorium Mata Kuliah Fisika Listrik Magnet 2026',
+                  'Koordinator Asisten Laboratorium Mata Kuliah Fisika Laboratorium 2026'
+                ]
               }
             ]
           },
@@ -59,35 +64,73 @@ export default function App() {
             items: [
               {
                 id: 1,
-                title: 'Asisten Praktikum (Teaching Assistant)',
+                title: 'Asisten Dosen',
                 subtitle: 'Departemen Fisika ITS (Mata Kuliah Fisika Listrik dan Magnet)',
-                period: 'Feb 2026 - Sekarang',
+                period: 'Feb 2026 - Juni 2026',
                 location: 'Surabaya, Jawa Timur',
                 details: [
-                  'Mempersiapkan materi instruksional, skrip presentasi, serta penjelasan mendalam terkait distribusi medan listrik',
-                  'Membimbing mahasiswa dalam sesi asistensi dan pemecahan masalah rangkaian listrik'
+                  'Mempersiapkan Materi untuk bahan ajar',
+                  'Mengajar mahasiswa semester 2 sebanyak 67 mahasiswa',
+                  'Bertugas membantu dosen mengawasi Kuis dan Evaluasi tengah dan akhir semester',
+                  'Bertugas mengoreksi Kuis 1 dan 2 serta memberi nilai'
                 ]
               },
               {
                 id: 2,
                 title: 'Koordinator & Asisten Laboratorium',
-                subtitle: 'Fisika Laboratorium 1 ITS',
-                period: 'Mei 2026 - Agu 2026',
+                subtitle: 'Departemen Fisika ITS, Mata Kuliah Fisika Laboratorium 1 ITS',
+                period: 'Juli 2026 - Sekarang',
                 location: 'Surabaya, Jawa Timur',
                 details: [
-                  'Mengelola jadwal praktikum, distribusi modul, presensi, serta penyusunan panduan pelatihan asisten laboratorium',
-                  'Memimpin dan menyelenggarakan sesi pelatihan teknis bagi para asisten laboratorium baru'
+                  'Mengelola timeline untuk praktikum',
+                  'Memimpin dan menyelenggarakan sesi pelatihan bagi para asisten laboratorium'
                 ]
               },
               {
                 id: 3,
-                title: 'Peserta Praktik Kerja / Magang',
-                subtitle: 'Balai Pengamanan Alat dan Fasilitas Kesehatan (BPAFK)',
-                period: 'Mei 2026 - Agu 2026',
+                title: 'Asisten Laboratorium',
+                subtitle: 'Departemen Fisika ITS (Mata Kuliah Fisika Listrik dan Magnet)',
+                period: 'Feb 2026 - Juni 2026',
                 location: 'Surabaya, Jawa Timur',
                 details: [
-                  'Melakukan pengujian, kalibrasi, dan peninjauan alat serta fasilitas kesehatan di lapangan',
-                  'Menyusun laporan teknis dan mendokumentasikan fungsi institusional balai kesehatan'
+                  'Mengajarkan teori yang relevan dengan jalannya praktikum',
+                  'Menjadi asisten pendamping praktikum untuk mahasiswa semester 2 teknik mesin'
+                ]
+              },
+              {
+                id: 4,
+                title: 'Peserta Praktik Kerja',
+                subtitle: 'Balai Pengamanan Alat dan Fasilitas Kesehatan (BPAFK) Surabaya',
+                period: 'Juli 2026',
+                location: 'Surabaya, Jawa Timur',
+                details: [
+                  'Melakukan pengujian dan kalibrasi alat kesehatan',
+                  'Menyusun laporan dan mempresentasikan hasil kerja praktek selama kurang lebih 1 bulan'
+                ]
+              },
+              {
+                id: 5,
+                title: 'Pengawas Ujian TKMSD',
+                subtitle: 'ITS',
+                period: 'Juli 2026',
+                location: 'Surabaya, Jawa Timur',
+                details: [
+                  'Mengawasi jalannya ujian untuk mahasiswa baru ITS 2026',
+                  'Membantu apabila ada mahasiswa yang terkendala',
+                  'Mengabsen kehadiran peserta'
+                ]
+              },
+              {
+                id: 6,
+                title: 'Freelance Telesurveyor',
+                subtitle: 'MPM AHM Jawa Timur',
+                period: '08 Feb 2026 - 16 Feb 2026',
+                location: 'Online',
+                details: [
+                  'Melakukan panggilan telepon sesuai database responden.',
+                  'Menyampaikan pertanyaan survei berdasarkan skrip.',
+                  'Mencatat dan melaporkan hasil survei secara akurat.',
+                  'Menjaga etika komunikasi dan kualitas data.'
                 ]
               }
             ]
@@ -100,9 +143,11 @@ export default function App() {
                 id: 1,
                 title: 'Project Officer (Ketua Pelaksana)',
                 subtitle: '11th Physics Summit (BSO HIMASIKA ITS)',
-                period: 'Mei 2026 - Sep 2026',
+                period: 'Mei 2026 - Sekarang',
                 location: 'Surabaya, Jawa Timur',
                 details: [
+                  'Membuat Konsep acara 11th Physics Summit',
+                  'Membuat rancangan timeline pelaksanaan physics summit',
                   'Mengoordinasikan struktur organisasi, penugasan tim, dan eksekusi operasional seluruh rangkaian acara Physics Summit',
                   'Mengawasi pelaksanaan sub-event termasuk Physics Summit Olympiad, Innovation Competition, Open House, dan program Student Ambassador'
                 ]
@@ -111,11 +156,114 @@ export default function App() {
                 id: 2,
                 title: 'Staff Event',
                 subtitle: 'Physics Summit 2025',
+                period: 'Juli 2025 - Nov 2025',
+                location: 'Surabaya, Jawa Timur',
+                details: [
+                  'Menjadi MC dari sub acara 11th Physics Summit',
+                  'Bertugas sebagai PIC Student Ambassador External Physics Summit',
+                  'Membuat konsep penugasan Student Ambassador',
+                  'Membuat konsep acara Upgrading dan Welcome Party Student Ambassador'
+                ]
+              },
+              {
+                id: 3,
+                title: 'Staff PSDM - Manejer Atlet',
+                subtitle: 'UKM Heroes Day Esports ITS',
+                period: 'Feb 2025 - Des 2025',
+                location: 'Surabaya, Jawa Timur',
+                details: [
+                  'Menyusun dan mengatur mekanisme seleksi atlet.',
+                  'Merancang jadwal latihan serta program pembinaan atlet.',
+                  'Mengelola kegiatan bonding untuk meningkatkan kekompakan tim.',
+                  'Bertanggung jawab sebagai Manajer Atlet pada POMPROV 2025.',
+                  'Pencapaian: Best Staff April 2025, Nilai Raport 95 (nilai sempurna pada poin inisiatif)'
+                ]
+              },
+              {
+                id: 4,
+                title: 'Staff PSDM',
+                subtitle: 'UKM Kopma Dr. Angka ITS',
+                period: 'Feb 2025 - Des 2025',
+                location: 'Surabaya, Jawa Timur',
+                details: [
+                  'Merancang dan melaksanakan kegiatan bonding anggota.',
+                  'Menjadi kepala Divisi Komtek Diklat Dasar 2025.',
+                  'Membuat konten edukasi PSDM untuk media sosial.'
+                ]
+              },
+              {
+                id: 5,
+                title: 'Staff Event',
+                subtitle: 'KPU HIMASIKA 2025-2026',
+                period: 'Des 2025 - Maret 2026',
+                location: 'Surabaya, Jawa Timur',
+                details: [
+                  'Menyusun rundown kegiatan dan JKJN untuk rangkaian acara pemilihan.',
+                  'Menyusun rundown kegiatan kampanye tertutup, kampanye terbuka, dan FAPT.',
+                  'Menyiapkan lembar penilaian untuk proses evaluasi kegiatan.',
+                  'Membantu penyusunan notulensi pada kegiatan kampanye terbuka dan kampanye tertutup.',
+                  'Membantu merapikan serta merevisi Term of Reference (TOR) kegiatan.'
+                ]
+              },
+              {
+                id: 6,
+                title: 'Kepala Divisi Public Relations',
+                subtitle: 'ITS E-Sport Arena 2025',
                 period: 'Agust 2025 - Nov 2025',
                 location: 'Surabaya, Jawa Timur',
                 details: [
-                  'Menyusun rundown dan konsep operasional acara',
-                  'Bertugas sebagai PIC Student Ambassador dalam koordinasi peserta'
+                  'Memimpin dan mengoordinasikan tim Public Relations.',
+                  'Menyusun undangan resmi turnamen esports antaruniversitas.',
+                  'Mengelola perizinan ke ESI Jawa Timur dan kerja sama publikasi.',
+                  'Monitoring progres dan evaluasi kinerja tim.'
+                ]
+              },
+              {
+                id: 7,
+                title: 'Staff Kestari',
+                subtitle: 'LKMM Pra-TD FSAD',
+                period: 'Sep 2025 - Nov 2025',
+                location: 'Surabaya, Jawa Timur',
+                details: [
+                  'Penghubung komunikasi antara peserta dan seluruh komisi.',
+                  'Rekap presensi, penugasan, dan evaluasi keaktifan peserta.',
+                  'Pendampingan administratif dan pencatatan realisasi rundown.'
+                ]
+              },
+              {
+                id: 8,
+                title: 'Staff Event',
+                subtitle: 'ITS CAMP',
+                period: 'Jul 2025 - Agust 2025',
+                location: 'Surabaya, Jawa Timur',
+                details: [
+                  'Menyusun rundown gladi bersih serta pelaksanaan acara hari pertama dan kedua.',
+                  'Berkoordinasi dengan SFS terkait kebutuhan tempat kegiatan.',
+                  'Bertanggung jawab atas alur konsumsi serta kelancaran acara pada acara hari pertama.',
+                  'Notulensi rapat divisi event.'
+                ]
+              },
+              {
+                id: 9,
+                title: 'Panitia Event',
+                subtitle: 'HDE ITS X EVOS EWC',
+                period: 'Jun 2025',
+                location: 'Surabaya, Jawa Timur',
+                details: [
+                  'Bertugas pada bagian registrasi peserta.',
+                  'Koordinasi lintas divisi selama pelaksanaan acara.'
+                ]
+              },
+              {
+                id: 10,
+                title: 'Panitia Event',
+                subtitle: 'Expo Kampus MAN 1 Gresik',
+                period: 'Nov 2024 - Jan 2025',
+                location: 'Gresik, Jawa Timur',
+                details: [
+                  'Menyusun rundown dan mengoordinasikan jalannya acara.',
+                  'Koordinator teknis pemenuhan kebutuhan kegiatan.',
+                  'Koordinator dena stand kampus agar mobilisasi berjalan dengan baik'
                 ]
               }
             ]
@@ -125,20 +273,26 @@ export default function App() {
             title: 'Pelatihan dan Sertifikasi',
             items: [
               {
-                id: 1,
-                title: 'LKMM Pra-TD',
-                subtitle: 'FSAD ITS',
-                period: '2025',
-                location: '',
-                details: []
+                id: 1, title: 'LKMM Pra-TD', subtitle: 'FSAD ITS', period: '2024', location: '',
+                details: ['Latihan Keterampilan Manajemen Mahasiswa Pra Tingkat Dasar']
               },
               {
-                id: 2,
-                title: 'Pelatihan Dasar Microsoft 365 Copilot',
-                subtitle: 'Sertifikasi Online',
-                period: '2026',
-                location: '',
-                details: []
+                id: 2, title: 'LKMM TD', subtitle: 'Fisika ITS', period: '2026', location: '',
+                details: ['Latihan Keterampilan Manajemen Mahasiswa Tingkat Dasar']
+              },
+              {
+                id: 3, title: 'LKMW', subtitle: 'ITS', period: '2024', location: '',
+                details: ['Latihan Keterampilan Manajemen Wirausaha']
+              },
+              {
+                id: 4, title: 'PKTI TD', subtitle: 'Fisika ITS', period: '2024', location: '',
+                details: ['Pelatihan Karya Tulis Ilmiah Tingkat Dasar']
+              },
+              {
+                id: 5, title: 'Sertifikasi Microsoft 365 Copilot Dasar', subtitle: 'Online', period: '2025', location: '', details: []
+              },
+              {
+                id: 6, title: 'Sertifikasi Rumus Dasar Excel', subtitle: 'Online', period: '2025', location: '', details: []
               }
             ]
           }
@@ -151,7 +305,7 @@ export default function App() {
   const currentCv = projects.find(p => p.id === activeProjectId) || projects[0];
 
   useEffect(() => {
-    localStorage.setItem('cv_projects_v6', JSON.stringify(projects));
+    localStorage.setItem('cv_projects_v7', JSON.stringify(projects));
   }, [projects]);
 
   const updateCurrentCv = (updatedFields) => {
@@ -210,14 +364,18 @@ export default function App() {
 
   const handleDownloadPDF = () => {
     const element = document.getElementById('cv-preview-element');
+    
+    // PERBAIKAN: Konfigurasi PDF untuk ganti halaman otomatis (Page Break)
     const options = {
-      margin: 0,
-      filename: `${currentCv.fileName || 'CV_Professional'}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-      jsPDF: { unit: 'mm', format: currentCv.paperSize.toLowerCase(), orientation: 'portrait' }
+      margin:       [10, 0, 15, 0], // Memberikan margin Atas 10mm dan Bawah 15mm saat ganti halaman
+      filename:     `${currentCv.fileName || 'CV_Professional'}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
+      jsPDF:        { unit: 'mm', format: currentCv.paperSize.toLowerCase(), orientation: 'portrait' },
+      pagebreak:    { mode: ['css', 'legacy'] } // Fitur membaca class CSS "avoid"
     };
-    window.html2pdf().from(element).set(options).save();
+    
+    window.html2pdf().set(options).from(element).save();
   };
 
   if (view === 'dashboard') {
@@ -330,7 +488,7 @@ export default function App() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Margin:</label>
+              <label className="block text-sm text-gray-600 mb-1">Margin Dalam (Kiri-Kanan):</label>
               <select value={currentCv.margin} onChange={(e) => updateCurrentCv({ margin: Number(e.target.value) })} className="border rounded p-1.5 bg-white text-sm w-full">
                 <option value={1}>1 cm</option>
                 <option value={1.27}>1.27 cm</option>
@@ -338,7 +496,7 @@ export default function App() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Zoom:</label>
+              <label className="block text-sm text-gray-600 mb-1">Zoom Pratinjau:</label>
               <select value={currentCv.zoom || 0.85} onChange={(e) => updateCurrentCv({ zoom: Number(e.target.value) })} className="border rounded p-1.5 bg-white text-sm w-full">
                 <option value={0.6}>60%</option>
                 <option value={0.75}>75%</option>
@@ -673,13 +831,15 @@ export default function App() {
           </div>
         )}
 
+        {/* PENAMBAHAN margin: 'auto' agar tetap berada di tengah layar preview */}
         <div style={{ transform: `scale(${currentCv.zoom || 0.85})`, transformOrigin: 'top center', transition: 'transform 0.2s ease', margin: 'auto' }}>
           <div 
             id="cv-preview-element"
             className="bg-white shadow-xl text-[10.5pt] mb-12 box-border shrink-0"
             style={{
               width: currentCv.paperSize === 'A4' ? '210mm' : currentCv.paperSize === 'A5' ? '148mm' : '215.9mm',
-              padding: `${currentCv.margin}cm`,
+              /* Padding Kiri-Kanan Diatur, namun Atas-Bawah pakai padding kecil untuk render stabil */
+              padding: `10mm ${currentCv.margin}cm`, 
               fontFamily: "'Times New Roman', Times, serif",
               color: "black",
               lineHeight: "1.15",
@@ -687,7 +847,8 @@ export default function App() {
             }}
           >
             {/* HEADER */}
-            <div className="text-center mb-2">
+            {/* Menggunakan inline style pageBreakInside: 'avoid' agar blok ini tidak kepotong setengah */}
+            <div className="text-center mb-2" style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h1 className="text-[15pt] font-bold uppercase mb-0.5">{currentCv.name}</h1>
               <p className="text-[9.5pt]">
                 {currentCv.address}, {currentCv.city}, {currentCv.province} | {currentCv.email} | {currentCv.phone} <br/>
@@ -696,7 +857,7 @@ export default function App() {
             </div>
 
             {/* SUMMARY */}
-            <div className="mb-2">
+            <div className="mb-2" style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Ringkasan Profil</h2>
               <p className="text-justify text-[10.0pt]">{currentCv.summary}</p>
             </div>
@@ -704,9 +865,13 @@ export default function App() {
             {/* RENDER DYNAMIC ALL-CUSTOM SECTIONS */}
             {(currentCv.sections || []).map((sec) => (
               <div key={sec.id} className="mb-2">
-                <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">{sec.title}</h2>
+                {/* Judul Subbab diatur agar tidak terpisah dari konten di bawahnya */}
+                <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0" style={{ pageBreakAfter: 'avoid', breakAfter: 'avoid' }}>
+                  {sec.title}
+                </h2>
                 {sec.items.map((item, iIdx) => (
-                  <div key={iIdx} className="mb-1.5">
+                  /* INI KUNCI UTAMANYA: pageBreakInside 'avoid' mencegah item terbelah di 2 halaman */
+                  <div key={iIdx} className="mb-1.5" style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
                     <div className="flex justify-between font-bold text-[10.0pt]">
                       <span>{item.title}</span>
                       <span>{item.period}</span>
@@ -728,7 +893,7 @@ export default function App() {
             ))}
 
             {/* SKILLS */}
-            <div>
+            <div style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">Keterampilan</h2>
               <div className="text-[9.5pt] mb-0.5">
                 <span className="font-bold">Keterampilan Digital: </span>
