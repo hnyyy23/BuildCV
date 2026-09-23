@@ -16,7 +16,7 @@ export default function App() {
   const [layoutMode, setLayoutMode] = useState('split');
 
   const [projects, setProjects] = useState(() => {
-    const saved = localStorage.getItem('cv_projects_v3');
+    const saved = localStorage.getItem('cv_projects_v5');
     if (saved) return JSON.parse(saved);
     return [
       {
@@ -34,16 +34,47 @@ export default function App() {
         phone: '(62)813-6219-2288',
         linkedin: 'in/hnysalwa',
         portfolio: 'https://intip.in/Portovolio Salwa',
-        summary: 'Mahasiswa Program Studi Fisika Institut Teknologi Sepuluh Nopember (ITS) angkatan 2024 yang memiliki minat dan pengalaman dalam manajemen acara, pengembangan sumber daya manusia (PSDM), serta koordinasi tim.',
+        summary: 'Mahasiswa Program Studi Fisika Institut Teknologi Sepuluh Nopember (ITS) angkatan 2024 yang memiliki minat dan pengalaman dalam manajemen acara, pengembangan sumber daya manusia (PSDM), koordinasi tim, serta eksperimen laboratorium dan fisika medis.',
         educations: [
-          { id: 1, degree: 'S1-Fisika', institution: 'Institut Teknologi Sepuluh Nopember (ITS)', startYear: '2024', endYear: 'Sekarang', isCurrent: true, score: 'IPK: 3,24', details: ['Seleksi Tahap 2 Beasiswa Rumah Kepemimpinan'] }
+          { id: 1, degree: 'S1 - Fisika', institution: 'Institut Teknologi Sepuluh Nopember (ITS)', startYear: '2024', endYear: 'Sekarang', isCurrent: true, score: 'IPK: 3,24', details: ['Seleksi Tahap 2 Beasiswa Rumah Kepemimpinan'] }
         ],
         experiences: [
-          { id: 1, title: 'Staff Event', startMonth: 'Agust', startYear: '2025', endMonth: 'Nov', endYear: '2025', isCurrent: false, organization: 'Physic Summit 2025', location: 'Surabaya, Jawa Timur', tasks: ['Menyusun rundown acara', 'Menjadi PIC Student Ambassador'] }
+          {
+            id: 1,
+            title: 'Project Officer (Ketua Pelaksana)',
+            startMonth: 'Mei',
+            startYear: '2026',
+            endMonth: 'Sep',
+            endYear: '2026',
+            isCurrent: false,
+            organization: '11th Physics Summit (BSO HIMASIKA ITS)',
+            location: 'Surabaya, Jawa Timur',
+            tasks: [
+              'Mengoordinasikan struktur organisasi, penugasan tim, dan eksekusi operasional seluruh rangkaian acara Physics Summit',
+              'Mengawasi pelaksanaan sub-event termasuk Physics Summit Olympiad, Innovation Competition, Open House, dan Student Ambassador'
+            ]
+          }
         ],
         certifications: ['LKMM Pra-TD', 'Pelatihan Dasar Microsoft 365 Copilot'],
-        digitalSkills: ['Microsoft Word', 'Microsoft Excel', 'Canva'],
-        softSkills: ['Komunikasi', 'Kepemimpinan', 'Manajemen Waktu']
+        digitalSkills: ['Microsoft Word', 'Microsoft Excel', 'Canva', 'Python', 'LaTeX'],
+        softSkills: ['Komunikasi', 'Kepemimpinan', 'Manajemen Waktu', 'Public Speaking'],
+        // Fitur Baru: Subbab/Bagian Custom Tambahan
+        customSections: [
+          {
+            id: 1,
+            title: 'Pengalaman Kerja',
+            items: [
+              {
+                id: 1,
+                title: 'Freelance Telesurveyor',
+                subtitle: 'MPM AHM Jawa Timur',
+                period: '2026',
+                location: 'Surabaya, Jawa Timur',
+                details: ['Melakukan panggilan telepon sesuai database responden', 'Menyampaikan pertanyaan survei berdasarkan skrip dan mencatat laporan secara akurat']
+              }
+            ]
+          }
+        ]
       }
     ];
   });
@@ -52,7 +83,7 @@ export default function App() {
   const currentCv = projects.find(p => p.id === activeProjectId) || projects[0];
 
   useEffect(() => {
-    localStorage.setItem('cv_projects_v3', JSON.stringify(projects));
+    localStorage.setItem('cv_projects_v5', JSON.stringify(projects));
   }, [projects]);
 
   const updateCurrentCv = (updatedFields) => {
@@ -79,14 +110,13 @@ export default function App() {
       portfolio: 'https://link-portofolio.com',
       summary: 'Tuliskan ringkasan profil atau deskripsi singkat mengenai latar belakang, keahlian, dan tujuan karir Anda di sini.',
       educations: [
-        { id: 1, degree: 'S1-Jurusan', institution: 'Nama Universitas', startYear: '2022', endYear: '2026', isCurrent: false, score: 'IPK: 3.xx', details: ['Pencapaian atau aktivitas akademik'] }
+        { id: 1, degree: 'S1 - Jurusan', institution: 'Nama Universitas', startYear: '2022', endYear: '2026', isCurrent: false, score: 'IPK: 3.xx', details: ['Pencapaian atau aktivitas akademik'] }
       ],
-      experiences: [
-        { id: 1, title: 'Nama Posisi / Jabatan', startMonth: 'Jan', startYear: '2025', endMonth: 'Des', endYear: '2025', isCurrent: false, organization: 'Nama Perusahaan / Organisasi', location: 'Kota, Provinsi', tasks: ['Deskripsi tugas atau pencapaian 1', 'Deskripsi tugas atau pencapaian 2'] }
-      ],
-      certifications: ['Nama Sertifikasi / Pelatihan'],
+      experiences: [],
+      certifications: [],
       digitalSkills: ['Microsoft Word', 'Microsoft Excel'],
-      softSkills: ['Komunikasi', 'Kerja Tim']
+      softSkills: ['Komunikasi', 'Kerja Tim'],
+      customSections: []
     };
 
     setProjects([...projects, dummyProj]);
@@ -292,6 +322,56 @@ export default function App() {
           <textarea placeholder="Ringkasan Profil" value={currentCv.summary} onChange={(e) => updateCurrentCv({ summary: e.target.value })} className="border p-2 rounded h-24" />
         </div>
 
+        {/* PENDIDIKAN */}
+        <h3 className="font-bold text-lg border-b pb-2 mb-4">Pendidikan</h3>
+        {currentCv.educations.map((edu, eduIndex) => (
+          <div key={edu.id} className="bg-gray-50 p-4 rounded border mb-4 relative">
+            <button onClick={() => {
+              const newEdu = [...currentCv.educations]; newEdu.splice(eduIndex, 1); updateCurrentCv({ educations: newEdu });
+            }} className="absolute top-3 right-3 text-red-500 text-sm font-bold">Hapus</button>
+            
+            <div className="grid grid-cols-2 gap-2 mb-2 pr-16">
+              <input type="text" placeholder="Jenjang / Jurusan (Cth: S1 - Fisika)" value={edu.degree} onChange={(e) => {
+                const newEdu = [...currentCv.educations]; newEdu[eduIndex].degree = e.target.value; updateCurrentCv({ educations: newEdu });
+              }} className="border p-2 rounded font-bold" />
+              <input type="text" placeholder="Nama Institusi" value={edu.institution} onChange={(e) => {
+                const newEdu = [...currentCv.educations]; newEdu[eduIndex].institution = e.target.value; updateCurrentCv({ educations: newEdu });
+              }} className="border p-2 rounded" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <input type="text" placeholder="Tahun Mulai (Cth: 2024)" value={edu.startYear} onChange={(e) => {
+                const newEdu = [...currentCv.educations]; newEdu[eduIndex].startYear = e.target.value; updateCurrentCv({ educations: newEdu });
+              }} className="border p-2 rounded text-sm" />
+              <input type="text" placeholder="Tahun Selesai / Sekarang" value={edu.endYear} onChange={(e) => {
+                const newEdu = [...currentCv.educations]; newEdu[eduIndex].endYear = e.target.value; updateCurrentCv({ educations: newEdu });
+              }} className="border p-2 rounded text-sm" />
+            </div>
+            <input type="text" placeholder="IPK / Skor (Cth: IPK: 3,24)" value={edu.score} onChange={(e) => {
+              const newEdu = [...currentCv.educations]; newEdu[eduIndex].score = e.target.value; updateCurrentCv({ educations: newEdu });
+            }} className="border p-2 rounded w-full mb-2 text-sm" />
+
+            <div className="mt-2">
+              <label className="text-sm font-semibold text-gray-700">Detail / Prestasi Pendidikan:</label>
+              {edu.details.map((det, dIdx) => (
+                <div key={dIdx} className="flex gap-2 mt-2">
+                  <span className="mt-2 text-gray-400">•</span>
+                  <input type="text" value={det} onChange={(e) => {
+                    const newEdu = [...currentCv.educations]; newEdu[eduIndex].details[dIdx] = e.target.value; updateCurrentCv({ educations: newEdu });
+                  }} className="border p-2 rounded w-full text-sm" placeholder="Tulis detail..." />
+                  <button onClick={() => {
+                    const newEdu = [...currentCv.educations]; newEdu[eduIndex].details.splice(dIdx, 1); updateCurrentCv({ educations: newEdu });
+                  }} className="bg-red-100 text-red-600 px-3 rounded font-bold">X</button>
+                </div>
+              ))}
+              <button onClick={() => {
+                const newEdu = [...currentCv.educations]; newEdu[eduIndex].details.push(''); updateCurrentCv({ educations: newEdu });
+              }} className="mt-2 text-blue-600 text-sm font-semibold">+ Tambah Detail Pendidikan</button>
+            </div>
+          </div>
+        ))}
+        <button onClick={() => updateCurrentCv({ educations: [...currentCv.educations, { id: Date.now(), degree: '', institution: '', startYear: '', endYear: '', score: '', details: [''] }] })} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pendidikan</button>
+
         {/* PENGALAMAN ORGANISASI */}
         <h3 className="font-bold text-lg border-b pb-2 mb-4">Pengalaman Organisasi & Kepanitiaan</h3>
         {currentCv.experiences.map((exp, expIndex) => (
@@ -372,10 +452,132 @@ export default function App() {
         ))}
         <button onClick={() => updateCurrentCv({ experiences: [...currentCv.experiences, { id: Date.now(), title: '', startMonth: 'Jan', startYear: '2025', endMonth: 'Des', endYear: '2025', isCurrent: false, organization: '', location: '', tasks: [''] }] })} className="w-full border-2 border-dashed border-gray-400 text-gray-600 font-bold py-2 rounded hover:bg-gray-50 mb-8">+ Tambah Pengalaman</button>
 
+        {/* ================= BAGIAN CUSTOM / SUBBAB TAMBAHAN ================= */}
+        <div className="border-t pt-4 mt-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-bold text-lg text-blue-800">✨ Subbab / Bagian Tambahan Custom</h3>
+            <button 
+              onClick={() => {
+                const newCustom = [...(currentCv.customSections || []), { id: Date.now(), title: 'Bagian Baru', items: [] }];
+                updateCurrentCv({ customSections: newCustom });
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1.5 px-3 rounded shadow"
+            >
+              + Buat Subbab Baru
+            </button>
+          </div>
+
+          {(currentCv.customSections || []).map((sec, secIdx) => (
+            <div key={sec.id} className="bg-blue-50/60 p-4 rounded-lg border border-blue-200 mb-6 relative">
+              <div className="flex justify-between items-center mb-3 pr-12">
+                <input 
+                  type="text" 
+                  value={sec.title} 
+                  onChange={(e) => {
+                    const newCustom = [...currentCv.customSections];
+                    newCustom[secIdx].title = e.target.value;
+                    updateCurrentCv({ customSections: newCustom });
+                  }} 
+                  className="border p-2 rounded font-bold text-blue-900 bg-white w-full text-sm" 
+                  placeholder="Nama Subbab (Cth: Pengalaman Kerja, Proyek, Penghargaan)"
+                />
+              </div>
+              <button 
+                onClick={() => {
+                  if(confirm(`Hapus subbab "${sec.title}" beserta isinya?`)){
+                    const newCustom = [...currentCv.customSections];
+                    newCustom.splice(secIdx, 1);
+                    updateCurrentCv({ customSections: newCustom });
+                  }
+                }} 
+                className="absolute top-4 right-4 text-red-500 hover:bg-red-100 p-1 rounded font-bold text-xs"
+              >
+                🗑️ Hapus Subbab
+              </button>
+
+              {/* Items dalam Subbab Custom */}
+              {sec.items.map((item, itemIdx) => (
+                <div key={item.id} className="bg-white p-3 rounded border mb-3 relative">
+                  <button 
+                    onClick={() => {
+                      const newCustom = [...currentCv.customSections];
+                      newCustom[secIdx].items.splice(itemIdx, 1);
+                      updateCurrentCv({ customSections: newCustom });
+                    }} 
+                    className="absolute top-2 right-2 text-red-500 font-bold text-xs"
+                  >
+                    X
+                  </button>
+                  <div className="grid grid-cols-2 gap-2 mb-2 pr-8">
+                    <input type="text" placeholder="Judul / Posisi" value={item.title} onChange={(e) => {
+                      const newCustom = [...currentCv.customSections];
+                      newCustom[secIdx].items[itemIdx].title = e.target.value;
+                      updateCurrentCv({ customSections: newCustom });
+                    }} className="border p-1.5 rounded font-bold text-sm" />
+                    <input type="text" placeholder="Instansi / Pemberi" value={item.subtitle} onChange={(e) => {
+                      const newCustom = [...currentCv.customSections];
+                      newCustom[secIdx].items[itemIdx].subtitle = e.target.value;
+                      updateCurrentCv({ customSections: newCustom });
+                    }} className="border p-1.5 rounded text-sm" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 mb-2">
+                    <input type="text" placeholder="Periode (Cth: 2026)" value={item.period} onChange={(e) => {
+                      const newCustom = [...currentCv.customSections];
+                      newCustom[secIdx].items[itemIdx].period = e.target.value;
+                      updateCurrentCv({ customSections: newCustom });
+                    }} className="border p-1.5 rounded text-xs" />
+                    <input type="text" placeholder="Lokasi" value={item.location} onChange={(e) => {
+                      const newCustom = [...currentCv.customSections];
+                      newCustom[secIdx].items[itemIdx].location = e.target.value;
+                      updateCurrentCv({ customSections: newCustom });
+                    }} className="border p-1.5 rounded text-xs" />
+                  </div>
+
+                  {/* Bullet points detail */}
+                  <div>
+                    <label className="text-xs font-semibold text-gray-600">Poin Keterangan:</label>
+                    {(item.details || []).map((det, dIdx) => (
+                      <div key={dIdx} className="flex gap-2 mt-1">
+                        <span className="text-gray-400">•</span>
+                        <input type="text" value={det} onChange={(e) => {
+                          const newCustom = [...currentCv.customSections];
+                          newCustom[secIdx].items[itemIdx].details[dIdx] = e.target.value;
+                          updateCurrentCv({ customSections: newCustom });
+                        }} className="border p-1 rounded w-full text-xs" placeholder="Tulis keterangan..." />
+                        <button onClick={() => {
+                          const newCustom = [...currentCv.customSections];
+                          newCustom[secIdx].items[itemIdx].details.splice(dIdx, 1);
+                          updateCurrentCv({ customSections: newCustom });
+                        }} className="text-red-500 font-bold text-xs px-1">X</button>
+                      </div>
+                    ))}
+                    <button onClick={() => {
+                      const newCustom = [...currentCv.customSections];
+                      if (!newCustom[secIdx].items[itemIdx].details) newCustom[secIdx].items[itemIdx].details = [];
+                      newCustom[secIdx].items[itemIdx].details.push('');
+                      updateCurrentCv({ customSections: newCustom });
+                    }} className="mt-1 text-blue-600 text-xs font-semibold">+ Tambah Poin</button>
+                  </div>
+                </div>
+              ))}
+
+              <button 
+                onClick={() => {
+                  const newCustom = [...currentCv.customSections];
+                  newCustom[secIdx].items.push({ id: Date.now(), title: '', subtitle: '', period: '', location: '', details: [''] });
+                  updateCurrentCv({ customSections: newCustom });
+                }} 
+                className="w-full bg-white border border-blue-300 text-blue-700 text-xs font-bold py-1.5 rounded hover:bg-blue-50"
+              >
+                + Tambah Isi ke Subbab "{sec.title}"
+              </button>
+            </div>
+          ))}
+        </div>
+
         {/* KETERAMPILAN */}
-        <h3 className="font-bold text-lg border-b pb-2 mb-4">Keterampilan</h3>
+        <h3 className="font-bold text-lg border-b pb-2 mb-4 mt-6">Keterampilan</h3>
         <div className="mb-10 bg-gray-50 p-4 rounded border flex flex-col gap-6">
-          
           <div>
             <label className="block text-sm font-semibold mb-2 text-gray-700">Keterampilan Digital:</label>
             <div className="flex flex-wrap gap-1.5 mb-3">
@@ -507,14 +709,12 @@ export default function App() {
               ))}
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* KANAN: PRATINJAU KERTAS DENGAN FLOATING NAV (JIKA MODE PREVIEW SAJA) */}
+      {/* KANAN: PRATINJAU KERTAS */}
       <div className={`${layoutMode === 'editor' ? 'hidden' : layoutMode === 'preview' ? 'w-full' : 'w-1/2'} h-full overflow-auto p-8 flex justify-center print-area bg-gray-100 transition-all duration-300 relative`}>
         
-        {/* Tombol Melayang (Floating Navigation) khusus saat mode Pratinjau Saja */}
         {layoutMode === 'preview' && (
           <div className="absolute top-4 left-4 z-20 flex gap-2 bg-white p-2 rounded-lg shadow-md border">
             <button 
@@ -567,7 +767,7 @@ export default function App() {
                 <div key={idx} className="mb-1.5">
                   <div className="flex justify-between font-bold text-[10.0pt]">
                     <span>{edu.degree}</span>
-                    <span>{edu.startYear} - {edu.isCurrent ? 'Sekarang' : edu.endYear}</span>
+                    <span>{edu.startYear} - {edu.endYear}</span>
                   </div>
                   <div className="flex justify-between italic text-[10.0pt] mb-0.5">
                     <span>{edu.institution}</span>
@@ -605,6 +805,32 @@ export default function App() {
                 </div>
               ))}
             </div>
+
+            {/* RENDER DYNAMIC CUSTOM SECTIONS (SUBBAB TAMBAHAN) */}
+            {(currentCv.customSections || []).map((sec) => (
+              <div key={sec.id} className="mb-2">
+                <h2 className="text-[10.5pt] font-bold uppercase border-b border-black mb-1 pb-0">{sec.title}</h2>
+                {sec.items.map((item, iIdx) => (
+                  <div key={iIdx} className="mb-2">
+                    <div className="flex justify-between font-bold text-[10.0pt]">
+                      <span>{item.title}</span>
+                      <span>{item.period}</span>
+                    </div>
+                    <div className="flex justify-between italic text-[10.0pt] mb-0.5">
+                      <span>{item.subtitle}</span>
+                      <span>{item.location}</span>
+                    </div>
+                    {item.details && item.details.length > 0 && (
+                      <ul className="list-disc pl-4 m-0 text-[9.5pt]">
+                        {item.details.map((d, dIdx) => (
+                          d.trim() !== '' && <li key={dIdx} className="mb-0">{d}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
 
             {/* CERTIFICATIONS */}
             {currentCv.certifications.length > 0 && (
